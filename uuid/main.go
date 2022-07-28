@@ -8,11 +8,22 @@ import (
 
 func main() {
   
-  var count int
-  flag.IntVar(&count, "n", 1, "number of UUIDs to generate")
+  count := flag.Int("n", 1, "number of UUIDs to generate")
+  verify := flag.String("v", "", "verify a UUID")
+
   flag.Parse()
 
-  for i:=0; i < count; i++ {
+  if *verify != "" {
+    _, err := uuid.Parse(*verify)
+    if err != nil {
+      fmt.Println("invalid")
+      return
+    }
+    fmt.Println("valid")
+    return
+  }
+
+  for i:=0; i < *count; i++ {
     fmt.Println(uuid.NewString());
   }
 }
