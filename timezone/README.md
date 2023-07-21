@@ -2,7 +2,11 @@
 Is a Go-based command-line interface (CLI) app that allows users to fetch and display the current time in a specified city using its timezone.
 
 ## Installation
-Needs golang 1.18+ installed.
+Needs golang 1.18+ installed. 
+
+To use the timezone CLI, you need to have Go installed on your system. If you haven't installed Go, you can download it from the official Go website: https://golang.org/dl/
+
+Once you have Go installed, you can install the Timezone CLI using the following command:
 
 ```bash
 go install github.com/usysrc/timezone@latest
