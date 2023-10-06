@@ -10,7 +10,6 @@ tools=(
 )
 
 # Install each tool
-ls | grep 1
 for tool in "${tools[@]}"; do
 	go install "$tool@latest"
 done
