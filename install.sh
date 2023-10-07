@@ -6,6 +6,7 @@ tools=(
 	github.com/usysrc/ssl-expiry
 	github.com/usysrc/timezone
 	github.com/usysrc/xls-format
+	github.com/usysrc/serve
 	# Add more tool repositories as needed
 )
 
