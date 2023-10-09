@@ -23,6 +23,17 @@ func getCurrentTime(city string) (string, error) {
 	return currentTime.Format(timeFormat), nil
 }
 
+func findCurrentTimeByRegion(city string, regions []string) (string, error) {
+	for _, region := range regions {
+		// Fetch the current time for the specified city.
+		currentTime, err := getCurrentTime(region + "/" + city)
+		if err == nil {
+			return currentTime, nil
+		}
+	}
+	return "", fmt.Errorf("no valid timezone found for %s", city)
+}
+
 var rootCmd = &cobra.Command{
 	Use:   "timezone [city]",
 	Short: "Get current time in a city",
@@ -31,10 +42,13 @@ var rootCmd = &cobra.Command{
 		// Combine the input arguments (city name) into a single string with spaces if needed.
 		city := strings.Join(args, " ")
 
-		// Fetch the current time for the specified city.
-		currentTime, err := getCurrentTime(city)
+		// Define the list of regions to search for the city's timezone.
+		regions := []string{"Asia", "America", "Europe"}
+
+		// Find the current time for the specified city within the available regions.
+		currentTime, err := findCurrentTimeByRegion(city, regions)
 		if err != nil {
-			// If an error occurs (e.g., invalid city), display an error message and exit with status code 1.
+			// If an error occurs (e.g., invalid city or no valid timezone found), display an error message and exit with status code 1.
 			fmt.Printf("Error getting time for %s: %v\n", city, err)
 			os.Exit(1)
 		}
