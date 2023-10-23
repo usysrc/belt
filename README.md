@@ -1,5 +1,5 @@
 # belt
-My toolbelt. A collection of small tools written in Go.
+My toolbelt. A collection of small productivity tools written in Go.
 
 It includes:
 
