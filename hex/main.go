@@ -141,7 +141,7 @@ func main() {
 	defer file.Close()
 
 	// Read and display in hex
-	content := ""
+	var hexBuilder strings.Builder
 	const bytesPerLine = 16
 	buffer := make([]byte, bytesPerLine)
 	for {
@@ -150,30 +150,30 @@ func main() {
 			break
 		}
 		if err != nil {
-			content += fmt.Sprintf("Error reading file: %s\n", err)
+			hexBuilder.WriteString(fmt.Sprintf("Error reading file: %s\n", err))
 			break
 		}
 
 		// Print hex data
 		for i := 0; i < bytesRead; i++ {
-			content += fmt.Sprintf("%02x ", buffer[i])
+			hexBuilder.WriteString(fmt.Sprintf("%02x ", buffer[i]))
 		}
 
 		// Print ASCII characters (if printable)
-		content += " "
+		hexBuilder.WriteString(" ")
 		for i := 0; i < bytesRead; i++ {
 			if buffer[i] >= 32 && buffer[i] <= 126 {
-				content += fmt.Sprintf("%c", buffer[i])
+				hexBuilder.WriteString(fmt.Sprintf("%c", buffer[i]))
 			} else {
-				content += "."
+				hexBuilder.WriteString(".")
 			}
 		}
-		content += "\n"
+		hexBuilder.WriteString("\n")
 
 	}
 
 	p := tea.NewProgram(
-		model{content: string(content)},
+		model{content: hexBuilder.String()},
 		tea.WithAltScreen(),       // turn on alternative full screen
 		tea.WithMouseCellMotion(), // turn on mouse support so we can track the mouse wheel
 	)
