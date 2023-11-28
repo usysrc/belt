@@ -10,3 +10,12 @@ How it looks:
 (='.'=)  linux
 (")_(")  6h52m45s
 ```
+
+## Installation
+
+
+Needs golang 1.21+ installed.
+
+```bash
+  go install github.com/usysrc/hasenfetch@latest
+```
