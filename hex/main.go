@@ -127,7 +127,7 @@ func max(a, b int) int {
 func main() {
 	// Check for file argument
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: hexviewer <file>")
+		fmt.Println("Usage: hex <file>")
 		os.Exit(1)
 	}
 
