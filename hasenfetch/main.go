@@ -7,9 +7,18 @@ import (
 	"os/user"
 	"runtime"
 	"strings"
-	"syscall"
 	"time"
+
+	"github.com/mackerelio/go-osstat/uptime"
 )
+
+func getSystemUptime() (time.Duration, error) {
+	uptimeDuration, err := uptime.Get()
+	if err != nil {
+		return 0, err
+	}
+	return uptimeDuration, nil
+}
 
 func main() {
 	bunny := []string{
@@ -43,12 +52,12 @@ func main() {
 	output.WriteString(runtime.GOOS)
 	output.WriteString("\n")
 
-	var info syscall.Sysinfo_t
-	if err := syscall.Sysinfo(&info); err != nil {
-		fmt.Printf("Error getting system uptime: %v\n", err)
+	uptime, err := getSystemUptime()
+	if err != nil {
+		fmt.Println("Error:", err)
 		return
 	}
-	output.WriteString(bunny[3] + fmt.Sprintf("%v\n", time.Duration(info.Uptime)*time.Second))
+	output.WriteString(bunny[3] + fmt.Sprintf("%v\n", uptime))
 
 	// output.WriteString(fmt.Sprintf("%v", info.Totalram))
 	fmt.Print(output.String())
