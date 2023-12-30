@@ -59,6 +59,5 @@ func main() {
 	}
 	output.WriteString(bunny[3] + fmt.Sprintf("%v\n", uptime))
 
-	// output.WriteString(fmt.Sprintf("%v", info.Totalram))
 	fmt.Print(output.String())
 }
