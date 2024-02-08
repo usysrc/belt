@@ -7,6 +7,7 @@ tools=(
 	github.com/usysrc/timezone
 	github.com/usysrc/xls-format
 	github.com/usysrc/serve
+	github.com/usysrc/jenv
 	# Add more tool repositories as needed
 )
 
