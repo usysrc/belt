@@ -22,12 +22,16 @@ You can use **jenv** by piping JSON data into it from another command or file. *
 ### Example
 
 ```bash
-$ echo '{"key1": "value1", "key2": "value2"}' | jenv
+echo '{"key1": "value1", "key2": "value2"}' | jenv
 export key1=value1
 export key2=value2
 ```
 
 You can then execute the output as shell commands to set the environment variables in your current shell session.
+
+```
+eval $(cat example.json|jenv)
+```
 
 ## License
 
