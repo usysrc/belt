@@ -9,13 +9,20 @@ import (
 
 var width int
 
+func run(cmd *cobra.Command, args []string) {
+	if len(args) < 1 || args[0] == "" {
+		cmd.Usage()
+		os.Exit(1)
+		return
+	}
+	view.CreateView(args[0], width)
+}
+
 var rootCmd = &cobra.Command{
-	Use:   "hex",
+	Use:   "hex <filename>",
 	Short: "View a file in hex format in a TUI.",
 	Long:  `This is a simple hex viewer that displays a file in hex format in a TUI.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		view.CreateView(args[0], width)
-	},
+	Run:   run,
 }
 
 func Execute() {
