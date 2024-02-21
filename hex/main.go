@@ -35,8 +35,8 @@ var (
 
 type model struct {
 	content  string
-	ready    bool
 	viewport viewport.Model
+	ready    bool
 }
 
 func (m model) Init() tea.Cmd {
