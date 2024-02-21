@@ -1,4 +1,4 @@
-# hex 
+# hex
 
 A simple and interactive hex viewer written in Go, leveraging the Bubble Tea library for a terminal-based UI. This tool allows you to view the hexadecimal representation of a file's contents, along with their ASCII equivalents.
 
@@ -10,9 +10,10 @@ A simple and interactive hex viewer written in Go, leveraging the Bubble Tea lib
 - **Dynamic Resizing:** Adjusts view to terminal window size changes.
 - **High-Performance Renderer:** Option to enable high-performance rendering for complex ANSI escape sequences.
 
-[![asciicast](https://asciinema.org/a/YBstTEx27k5bWFhBd06MaJzla.svg)](https://asciinema.org/a/YBstTEx27k5bWFhBd06MaJzla)
+![media/hex.gif](media/hex.gif)
 
 ## Installation
+
 Needs golang 1.21.4+ installed.
 
 To use hex, you need to have Go installed on your system. If you haven't installed Go, you can download it from the official Go website: https://golang.org/dl/
@@ -34,4 +35,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Contributions are welcome! If you find any bugs or have suggestions for improvements, please open an issue or create a pull request.
 
 ## Acknowledgments
+
 This was inspired by a childhood with hex editors on DOS.
