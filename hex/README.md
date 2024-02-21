@@ -10,6 +10,7 @@ A simple and interactive hex viewer written in Go, leveraging the Bubble Tea lib
 - **Dynamic Resizing:** Adjusts view to terminal window size changes.
 - **High-Performance Renderer:** Option to enable high-performance rendering for complex ANSI escape sequences.
 
+[![asciicast](https://asciinema.org/a/YBstTEx27k5bWFhBd06MaJzla.svg)](https://asciinema.org/a/YBstTEx27k5bWFhBd06MaJzla)
 
 ## Installation
 Needs golang 1.21.4+ installed.
