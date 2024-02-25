@@ -16,7 +16,7 @@ A simple and interactive hex viewer written in Go, leveraging the Bubble Tea lib
 
 ## Installation
 
-Needs golang 1.21.4+ installed.
+Needs golang 1.22 installed.
 
 To use hex, you need to have Go installed on your system. If you haven't installed Go, you can download it from the official Go website: https://golang.org/dl/
 
