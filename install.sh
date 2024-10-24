@@ -8,6 +8,7 @@ tools=(
   github.com/usysrc/xls-format
   github.com/usysrc/serve
   github.com/usysrc/jenv
+  github.com/usysrc/hex
   # Add more tool repositories here
 )
 
