@@ -1,0 +1,2 @@
+# obs
+obsidian CLI
