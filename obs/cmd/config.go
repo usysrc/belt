@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -35,10 +36,14 @@ func NewConfigCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&vault, "vault", "v", "", "Name of the Obsidian vault")
-	cmd.MarkFlagRequired("vault")
+	if err := cmd.MarkFlagRequired("vault"); err != nil {
+		log.Fatal("Error marking flag as required:", err)
+	}
 
 	cmd.Flags().StringVarP(&targetFolder, "targetFolder", "t", "", "Folder where new notes are created")
-	cmd.MarkFlagRequired("targetFolder")
+	if err := cmd.MarkFlagRequired("targetFolder"); err != nil {
+		log.Fatal("Error marking flag as required:", err)
+	}
 
 	return cmd
 }
