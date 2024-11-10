@@ -4,9 +4,9 @@ A CLI for interacting with Obsidian.
 ## Installation
 Needs golang 1.23+ installed.
 
-To use jenv, you need to have Go installed on your system. If you haven't installed Go, you can download it from the official Go website: https://golang.org/dl/
+To use obs, you need to have Go installed on your system. If you haven't installed Go, you can download it from the official Go website: https://golang.org/dl/
 
-Once you have Go installed, you can install jenv using the following command:
+Once you have Go installed, you can install obs using the following command:
 
 ```bash
 go install github.com/usysrc/obs
@@ -16,7 +16,7 @@ This will download the source code and compile the binary.
 
 ## Usage
 
-You need to first **obs** set the default vault and the default folder for new notes.
+You need to first set the default vault and the default folder for new notes.
 
 ```bash
 obs config --vault "mytestvault" --testFolder "general"
