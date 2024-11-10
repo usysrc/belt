@@ -44,7 +44,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contributing
 
 Contributions are welcome! If you find any bugs or have suggestions for improvements, please open an issue or create a pull request.
-
-## Acknowledgments
-
-This tool was inspired by similar utilities and was created to provide a simple way to convert JSON data to environment variables.
