@@ -8,6 +8,14 @@ import (
 )
 
 func Execute(action, vault, param, targetFolder string) error {
+	// Optionally add targetFolder if provided
+	// Start building the URI with the base parameters
+	uri := buildURI(vault, param, action, targetFolder)
+
+	return openURI(uri)
+}
+
+func buildURI(vault string, param string, action string, targetFolder string) string {
 	encodedVault := url.PathEscape(vault)
 	encodedParam := url.PathEscape(param)
 
@@ -18,20 +26,17 @@ func Execute(action, vault, param, targetFolder string) error {
 	default:
 		paramName = "file"
 
-		// Optionally add targetFolder if provided
 		if targetFolder != "" {
 			encodedFolder := url.PathEscape(targetFolder)
 			encodedParam = fmt.Sprintf("%s/", encodedFolder) + encodedParam
 		}
 	}
 
-	// Start building the URI with the base parameters
 	uri := fmt.Sprintf("obsidian://%s?vault=%s&%s=%s",
 		action, encodedVault, paramName, encodedParam)
 
 	fmt.Println(uri)
-
-	return openURI(uri)
+	return uri
 }
 
 func openURI(uri string) error {

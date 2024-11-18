@@ -5,6 +5,7 @@ import (
 )
 
 func NewRootCmd() *cobra.Command {
+
 	cmd := &cobra.Command{
 		Use:   "obs",
 		Short: "A CLI for interacting with Obsidian",
