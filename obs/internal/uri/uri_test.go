@@ -42,7 +42,13 @@ func TestBuildURI(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.action, func(t *testing.T) {
-			got := buildURI(tt.vault, tt.param, tt.action, tt.targetFolder)
+			params := URIParams{
+				Vault:        tt.vault,
+				Param:        tt.param,
+				Action:       tt.action,
+				TargetFolder: tt.targetFolder,
+			}
+			got := buildURI(params)
 			if got != tt.expected {
 				t.Errorf("buildURI() = %v, want %v", got, tt.expected)
 			}

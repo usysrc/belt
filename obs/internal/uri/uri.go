@@ -7,33 +7,44 @@ import (
 	"runtime"
 )
 
+type URIParams struct {
+	Vault        string
+	Param        string
+	Action       string
+	TargetFolder string
+}
+
 func Execute(action, vault, param, targetFolder string) error {
-	// Optionally add targetFolder if provided
-	// Start building the URI with the base parameters
-	uri := buildURI(vault, param, action, targetFolder)
+	params := URIParams{
+		Vault:        vault,
+		Param:        param,
+		Action:       action,
+		TargetFolder: targetFolder,
+	}
+	uri := buildURI(params)
 
 	return openURI(uri)
 }
 
-func buildURI(vault string, param string, action string, targetFolder string) string {
-	encodedVault := url.PathEscape(vault)
-	encodedParam := url.PathEscape(param)
+func buildURI(params URIParams) string {
+	encodedVault := url.PathEscape(params.Vault)
+	encodedParam := url.PathEscape(params.Param)
 
 	var paramName string
-	switch action {
+	switch params.Action {
 	case "search":
 		paramName = "query"
 	default:
 		paramName = "file"
 
-		if targetFolder != "" {
-			encodedFolder := url.PathEscape(targetFolder)
+		if params.TargetFolder != "" {
+			encodedFolder := url.PathEscape(params.TargetFolder)
 			encodedParam = fmt.Sprintf("%s/", encodedFolder) + encodedParam
 		}
 	}
 
 	uri := fmt.Sprintf("obsidian://%s?vault=%s&%s=%s",
-		action, encodedVault, paramName, encodedParam)
+		params.Action, encodedVault, paramName, encodedParam)
 
 	fmt.Println(uri)
 	return uri
