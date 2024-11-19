@@ -46,7 +46,6 @@ func buildURI(params URIParams) string {
 	uri := fmt.Sprintf("obsidian://%s?vault=%s&%s=%s",
 		params.Action, encodedVault, paramName, encodedParam)
 
-	fmt.Println(uri)
 	return uri
 }
 
