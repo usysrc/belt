@@ -15,7 +15,10 @@ func main() {
 		Use:   "file-server",
 		Short: "Start the server",
 		Run: func(_ *cobra.Command, _ []string) {
-			startFileServer(port)
+			if err := startFileServer(port); err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 		},
 	}
 	rootCmd.Flags().StringVarP(&port, "port", "p", "8080", "Port for the file server")
@@ -26,8 +29,8 @@ func main() {
 	}
 }
 
-func startFileServer(port string) {
+func startFileServer(port string) error {
 	handler := http.FileServer(http.Dir("."))
 	fmt.Printf("File server is running on http://localhost:%s\n", port)
-	http.ListenAndServe(":"+port, handler)
+	return http.ListenAndServe(":"+port, handler)
 }
