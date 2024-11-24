@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -16,7 +16,7 @@ func main() {
 		Short: "Start the server",
 		Run: func(_ *cobra.Command, _ []string) {
 			if err := startFileServer(port); err != nil {
-				fmt.Println(err)
+				log.Fatal(err)
 				os.Exit(1)
 			}
 		},
@@ -24,13 +24,12 @@ func main() {
 	rootCmd.Flags().StringVarP(&port, "port", "p", "8080", "Port for the file server")
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 }
 
 func startFileServer(port string) error {
 	handler := http.FileServer(http.Dir("."))
-	fmt.Printf("File server is running on http://localhost:%s\n", port)
+	log.Printf("File server is running on http://localhost:%s\n", port)
 	return http.ListenAndServe(":"+port, handler)
 }
