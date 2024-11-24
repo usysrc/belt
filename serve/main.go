@@ -28,6 +28,6 @@ func main() {
 
 func startFileServer(port string) {
 	handler := http.FileServer(http.Dir("."))
-	fmt.Printf("File server is running on port %s...\n", port)
+	fmt.Printf("File server is running on http://localhost:%s\n", port)
 	http.ListenAndServe(":"+port, handler)
 }
