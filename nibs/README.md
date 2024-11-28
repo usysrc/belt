@@ -29,14 +29,17 @@ Go to your LÖVE project directory and run nibs:
 nibs
 ```
 
-2. Make changes to your project files (e.g., `.lua`, `.png`, `.jpg`, etc.). The tool will automatically detect changes, bundle the project, and restart LÖVE2D.
+2. Make changes to your project files (e.g., `.lua`, `.png`, `.jpg`, etc.). The tool will automatically detect changes, bundle the project, and restart LÖVE.
+
+## Known issues
+- Focus stealing: when restarting LÖVE, the focus will shift to the newly created instance, annoying if you are in the habit of saving often.
 
 ## Project Structure
 
-- `main.go`: The main Go file that contains the logic for watching files, bundling the project, and starting LÖVE2D.
-- `main.lua`: The main Lua file for your LÖVE2D project.
-- `Makefile`: A simple makefile to run the LÖVE2D project.
-- `game.love`: The bundled LÖVE2D project file.
+- `main.go`: The main Go file that contains the logic for watching files, bundling the project, and starting LÖVE.
+- `main.lua`: The main Lua file for your LÖVE project.
+- `Makefile`: A simple makefile to run the LÖVE project.
+- `game.love`: The bundled LÖVE project file.
 - `.gitignore`: Git ignore file.
 - `go.mod`: Go module file.
 - `go.sum`: Go dependencies file.

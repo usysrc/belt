@@ -56,7 +56,7 @@ func watchFiles(watcher *fsnotify.Watcher, dir, lovePath, outputFile string) {
 			}
 			if isRelevantChange(event) {
 				log.Printf("Change detected: %s %s", event.Name, event.Op)
-				// only bundle and start LÖVE2D if there hasn't been a change in the last 500ms
+				// only bundle and start LÖVE if there hasn't been a change in the last 500ms
 				// and the change is a WRITE
 				if time.Since(lastBundle) > debounceDuration && event.Op&fsnotify.Write == fsnotify.Write {
 					lastBundle = time.Now()
@@ -165,36 +165,36 @@ func startLove(lovePath, outputFile string) {
 	mu.Lock()
 	defer mu.Unlock()
 
-	log.Println("Attempting to start LÖVE2D...")
+	log.Println("Attempting to start LÖVE...")
 
 	for running {
-		log.Println("Stopping previous LÖVE2D...")
+		log.Println("Stopping previous LÖVE...")
 		if err := cmd.Process.Kill(); err != nil {
-			log.Printf("Failed to stop LÖVE2D: %v", err)
+			log.Printf("Failed to stop LÖVE: %v", err)
 		} else if err := cmd.Wait(); err != nil {
-			log.Println("Previous LÖVE2D stopped successfully")
+			log.Println("Previous LÖVE stopped successfully")
 		}
 	}
 
-	log.Println("Starting LÖVE2D with bundled project...")
+	log.Println("Starting LÖVE with bundled project...")
 	cmd = exec.Command(lovePath, outputFile)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err := cmd.Start()
 	if err != nil {
-		log.Printf("Failed to start LÖVE2D: %v", err)
+		log.Printf("Failed to start LÖVE: %v", err)
 		return
 	}
 
 	running = true
-	log.Println("LÖVE2D started successfully")
+	log.Println("LÖVE started successfully")
 
 	go func() {
 		if err := cmd.Wait(); err != nil && !strings.Contains(err.Error(), "signal: killed") {
-			log.Printf("LÖVE2D exited: %v", err)
+			log.Printf("LÖVE exited: %v", err)
 		}
 		running = false
-		log.Println("LÖVE2D stopped")
+		log.Println("LÖVE stopped")
 	}()
 }
