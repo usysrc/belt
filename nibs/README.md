@@ -16,25 +16,20 @@ Nibs is a tool for automatically bundling and running LÖVE projects. It watches
 
 ## Installation
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/usysrc/nibs.git
-    cd nibs
-    ```
-
-2. Install dependencies:
-    ```sh
-    go mod tidy
-    ```
+1. Install with go: 
+```sh
+go install github.com/usysrc/nibs
+```
 
 ## Usage
+Go to your LÖVE project directory and run nibs:
 
 1. Run the project:
-    ```sh
-    go run main.go
-    ```
+```sh
+nibs
+```
 
-2. Make changes to your project files (e.g., `.lua`, `.png`, `.jpg`, etc.). The tool will automatically detect changes, bundle the project, and start LÖVE2D.
+2. Make changes to your project files (e.g., `.lua`, `.png`, `.jpg`, etc.). The tool will automatically detect changes, bundle the project, and restart LÖVE2D.
 
 ## Project Structure
 
