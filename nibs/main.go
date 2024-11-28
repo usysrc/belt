@@ -29,6 +29,7 @@ func main() {
 	lovePath := "love"
 	outputFile := "game.love"
 
+	bundleProject(dirToWatch, outputFile)
 	startLove(lovePath, outputFile)
 
 	// Initialize watcher
