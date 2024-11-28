@@ -1,6 +1,6 @@
-# Nibs
+# nibs
 
-Nibs is a tool for automatically bundling and running LÖVE projects. It watches for changes in your project directory and automatically creates a `.love` file and starts the LÖVE engine.
+`nibs` is a tool for automatically bundling and running LÖVE projects. It watches for changes in your project directory and automatically creates a `.love` file and starts the LÖVE engine.
 
 ## Features
 
