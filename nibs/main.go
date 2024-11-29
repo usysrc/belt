@@ -30,7 +30,19 @@ func main() {
 	outputFile := "game.love"
 
 	bundleProject(dirToWatch, outputFile)
+
+	// if argument was build then exit
+	if len(os.Args) > 1 && os.Args[1] == "build" {
+		return
+	}
+
 	startLove(lovePath, outputFile)
+
+	// if argument was runonce then exit
+	if len(os.Args) > 1 && os.Args[1] == "runonce" {
+		<-done
+		return
+	}
 
 	// Initialize watcher
 	watcher, err := fsnotify.NewWatcher()
