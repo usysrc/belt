@@ -29,7 +29,13 @@ func main() {
 }
 
 func startFileServer(port string) error {
-	handler := http.FileServer(http.Dir("."))
+	fileServerHandler := http.FileServer(http.Dir("."))
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cross-Origin-Opener-Policy", "same-origin")
+		w.Header().Set("Cross-Origin-Embedder-Policy", "require-corp")
+		fileServerHandler.ServeHTTP(w, r)
+	})
+
 	log.Printf("File server is running on http://localhost:%s\n", port)
 	return http.ListenAndServe(":"+port, handler)
 }
