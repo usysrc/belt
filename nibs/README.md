@@ -56,17 +56,6 @@ nibs watch
 ## Known issues
 - Focus stealing: when restarting LÖVE, the focus will shift to the newly created instance, annoying if you are in the habit of saving often.
 
-## Project Structure
-
-- `main.go`: The main Go file that contains the logic for watching files, bundling the project, and starting LÖVE.
-- `main.lua`: The main Lua file for your LÖVE project.
-- `Makefile`: A simple makefile to run the LÖVE project.
-- `game.love`: The bundled LÖVE project file.
-- `.gitignore`: Git ignore file.
-- `go.mod`: Go module file.
-- `go.sum`: Go dependencies file.
-- `LICENSE`: License file.
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
