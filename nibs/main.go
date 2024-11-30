@@ -2,6 +2,7 @@ package main
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -12,6 +13,7 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/go-git/go-git/v5"
 )
 
 var (
@@ -25,6 +27,45 @@ var (
 const debounceDuration = 500 * time.Millisecond
 
 func main() {
+
+	if len(os.Args) > 1 && os.Args[1] == "add" {
+		if len(os.Args) < 3 {
+			log.Fatal("Please provide a file or directory to add")
+		}
+		whatToAdd := os.Args[2]
+		if whatToAdd == "hump" {
+			// Repository URL
+			repoURL := "https://github.com/vrld/hump.git"
+
+			// Current directory
+			currentDir, err := os.Getwd()
+			if err != nil {
+				log.Fatalf("Failed to get current directory: %v", err)
+			}
+
+			// Directory to clone the repository to
+			humpDir := filepath.Join(currentDir, "hump")
+
+			// Clone the repository
+			_, err = git.PlainClone(humpDir, false, &git.CloneOptions{
+				URL:      repoURL,
+				Depth:    1, // Only fetch the latest commit
+				Progress: os.Stdout,
+			})
+
+			if err != nil {
+				log.Fatalf("Failed to clone repository: %v", err)
+			}
+
+			fmt.Println("Successfully cloned vrld/hump repository")
+
+			return
+		} else {
+			log.Fatal("Unknown library to add")
+		}
+
+	}
+
 	dirToWatch := "./" // Change to your project directory
 	lovePath := "love"
 	outputFile := "game.love"
