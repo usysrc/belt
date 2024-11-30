@@ -22,14 +22,36 @@ go install github.com/usysrc/nibs
 ```
 
 ## Usage
-Go to your LÖVE project directory and run nibs:
+
+### Add libraries
+> [!warning]
+> *currently only supporting hump*
+
+Go to your LÖVE project directory and run:
+
+```shell
+nibs add hump
+```
+
+### Bundle
+Go to your LÖVE project directory and run:
+
+```sh
+nibs bundle -o output.love
+```
+
+If you don't provide a `-o` option the output will be `[directory].love`.
+
+### Watch
+Go to your LÖVE project directory and run:
 
 1. Run the project:
 ```sh
-nibs
+nibs watch
 ```
 
 2. Make changes to your project files (e.g., `.lua`, `.png`, `.jpg`, etc.). The tool will automatically detect changes, bundle the project, and restart LÖVE.
+
 
 ## Known issues
 - Focus stealing: when restarting LÖVE, the focus will shift to the newly created instance, annoying if you are in the habit of saving often.
