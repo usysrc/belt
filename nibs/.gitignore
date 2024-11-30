@@ -25,4 +25,5 @@ go.work.sum
 .env
 
 # love file
-.love
+game.love
+*.love
