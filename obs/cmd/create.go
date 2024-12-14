@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/usysrc/obs/internal/config"
@@ -29,7 +31,18 @@ func NewCreateCmd() *cobra.Command {
 			if noteName == "" {
 				return fmt.Errorf("note name cannot be empty")
 			}
-			noteContent := args[1]
+
+			// Arguments take precedence over stdin
+			noteContent := ""
+			if len(args) > 1 {
+				noteContent = args[1]
+			} else {
+				noteContents, err := io.ReadAll(os.Stdin)
+				if err != nil {
+					return err
+				}
+				noteContent = string(noteContents)
+			}
 			return uri.Execute("new", vault, noteName, targetFolder, noteContent)
 		},
 	}
