@@ -10,16 +10,18 @@ import (
 type URIParams struct {
 	Vault        string
 	Param        string
+	Content      string
 	Action       string
 	TargetFolder string
 }
 
-func Execute(action, vault, param, targetFolder string) error {
+func Execute(action, vault, param, targetFolder, content string) error {
 	params := URIParams{
 		Vault:        vault,
 		Param:        param,
 		Action:       action,
 		TargetFolder: targetFolder,
+		Content:      content,
 	}
 	uri := buildURI(params)
 
@@ -29,6 +31,7 @@ func Execute(action, vault, param, targetFolder string) error {
 func buildURI(params URIParams) string {
 	encodedVault := url.PathEscape(params.Vault)
 	encodedParam := url.PathEscape(params.Param)
+	encodedContent := url.PathEscape(params.Content)
 
 	var paramName string
 	switch params.Action {
@@ -43,8 +46,8 @@ func buildURI(params URIParams) string {
 		}
 	}
 
-	uri := fmt.Sprintf("obsidian://%s?vault=%s&%s=%s",
-		params.Action, encodedVault, paramName, encodedParam)
+	uri := fmt.Sprintf("obsidian://%s?vault=%s&%s=%s&content=%s",
+		params.Action, encodedVault, paramName, encodedParam, encodedContent)
 
 	return uri
 }

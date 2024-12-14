@@ -28,7 +28,7 @@ func NewOpenCmd() *cobra.Command {
 			if noteName == "" {
 				return fmt.Errorf("note name cannot be empty")
 			}
-			return uri.Execute("open", vault, noteName, targetFolder)
+			return uri.Execute("open", vault, noteName, targetFolder, "")
 		},
 	}
 

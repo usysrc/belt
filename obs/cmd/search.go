@@ -24,7 +24,7 @@ func NewSearchCmd() *cobra.Command {
 			if query == "" {
 				return fmt.Errorf("query can not be empty")
 			}
-			return uri.Execute("search", vault, query, "")
+			return uri.Execute("search", vault, query, "", "")
 		},
 	}
 
