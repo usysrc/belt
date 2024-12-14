@@ -19,7 +19,7 @@ This will download the source code and compile the binary.
 You need to first set the default vault and the default folder for new notes.
 
 ```bash
-obs config --vault "mytestvault" --testFolder "general"
+obs config --vault "mytestvault" --targetFolder "general"
 
 ```
 
