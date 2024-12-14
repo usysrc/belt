@@ -29,7 +29,7 @@ Make sure that obsidian is running!
 
 To create new notes use:
 ```bash
-obs create mynewnote
+obs create mynewnote "this is my note content"
 ```
 
 To open notes:
