@@ -1,0 +1,37 @@
+# justfile for jo utility
+
+# Default recipe to run when just is called without arguments
+default:
+    @just --list
+
+# Build the jo binary
+build:
+    go build -o jo main.go
+
+# Run the jo utility with provided arguments
+run *ARGS:
+    go run main.go {{ARGS}}
+
+# Build and install jo to GOPATH/bin
+install:
+    go install
+
+# Clean build artifacts
+clean:
+    rm -f jo
+
+# Format code
+fmt:
+    gofmt -w .
+
+# Run linter (requires golint)
+lint:
+    golint ./...
+
+# Run all tests
+test:
+    go test -v ./...
+
+# Run a specific test
+test-one NAME:
+    go test -v -run {{NAME}}

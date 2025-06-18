@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(go test:*)",
+      "Bash(go get:*)",
+      "Bash(jj describe:*)",
+      "Bash(jj bookmark set:*)",
+      "Bash(jj git push:*)"
+    ],
+    "deny": []
+  }
+}
