@@ -14,6 +14,13 @@ go install codeberg.org/usysrc/belt/jo@latest
 ```bash
 jo key1=value1 key2=value2
 ```
+Output:
+```json
+{
+  "key1": "value1",
+  "key2": "value2"
+}
+```
 
 ### From stdin
 ```bash
