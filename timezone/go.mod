@@ -1,4 +1,4 @@
-module github.com/usysrc/timezone
+module codeberg.org/usysrc/belt/timezone
 
 go 1.20
 

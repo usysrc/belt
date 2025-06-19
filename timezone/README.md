@@ -9,7 +9,7 @@ To use the timezone CLI, you need to have Go installed on your system. If you ha
 Once you have Go installed, you can install the Timezone CLI using the following command:
 
 ```bash
-go install github.com/usysrc/timezone@latest
+go install codeberg.org/usysrc/belt/timezone@latest
 ```
 
 ## Usage
