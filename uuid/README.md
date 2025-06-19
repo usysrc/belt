@@ -6,7 +6,7 @@ A simple UUID generator
 Needs golang 1.18 installed.
 
 ```bash
-go install github.com/usysrc/uuid@latest
+go install codeberg.org/usysrc/belt/uuid@latest
 ```
 
 

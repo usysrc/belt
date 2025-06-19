@@ -1,4 +1,4 @@
-module github.com/usysrc/uuid
+module codeberg.org/usysrc/belt/uuid
 
 go 1.22.0
 
