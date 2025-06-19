@@ -1,4 +1,4 @@
-module github.com/usysrc/hasenfetch
+module codeberg.org/usysrc/belt/hasenfetch
 
 go 1.21.4
 
