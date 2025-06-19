@@ -1,3 +1,3 @@
-module github.com/usysrc/ssl-expiry
+module codeberg.org/usysrc/belt/ssl-expiry
 
 go 1.20

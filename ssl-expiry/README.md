@@ -10,7 +10,7 @@ To use the ssl-expiry tool, you need to have Go installed on your system. If you
 Once you have Go installed, you can install the ssl-expiry tool using the following command:
 
 ```bash
-go install github.com/usysrc/ssl-expiry@latest
+go install codeberg.org/usysrc/belt/ssl-expiry@latest
 ```
 
 ## Usage
