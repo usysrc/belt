@@ -34,5 +34,6 @@ This project uses Jujutsu (jj) for version control. When the user asks to "jj de
 - `docs[scope]: description` for documentation
 - `refactor[scope]: description` for code refactoring
 - `test[scope]: description` for test changes
+The scope would be each tool identified by the corresponding subdirectory.
 
 **Example Usage**: When user says "jj describe and push", create a descriptive commit message based on the changes made, then execute the three-step workflow above.
