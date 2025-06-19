@@ -1,6 +1,6 @@
 package main
 
-import "github.com/usysrc/nibs/cmd"
+import "codeberg.org/usysrc/belt/nibs/cmd"
 
 func main() {
 	cmd.Execute()

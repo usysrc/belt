@@ -18,7 +18,7 @@
 
 1. Install with go: 
 ```sh
-go install github.com/usysrc/nibs
+go install codeberg.org/usysrc/belt/nibs
 ```
 
 ## Usage

@@ -1,4 +1,4 @@
-module github.com/usysrc/nibs
+module codeberg.org/usysrc/belt/nibs
 
 go 1.23.2
 
