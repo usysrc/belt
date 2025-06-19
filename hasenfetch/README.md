@@ -17,5 +17,5 @@ How it looks:
 Needs golang 1.21+ installed.
 
 ```bash
-  go install github.com/usysrc/hasenfetch@latest
+  go install codeberg.org/usysrc/belt/hasenfetch@latest
 ```
