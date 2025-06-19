@@ -1,4 +1,4 @@
-module github.com/usysrc/xls-format
+module codeberg.org/usysrc/belt/xls-format
 
 go 1.18
 

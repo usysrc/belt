@@ -9,7 +9,7 @@ xls-format is a command-line tool for formatting columns in an Excel file. It al
 To install xls-format, you need to have Go installed. Then, you can use the following command to install the tool:
 
 ```shell
-go install github.com/usysrc/xls-format
+go install codeberg.org/usysrc/belt/xls-format
 ```
 
 ## Usage
