@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/usysrc/proto/jo/cmd"
+	"codeberg.org/usysrc/belt/jo/cmd"
 )
 
 func main() {

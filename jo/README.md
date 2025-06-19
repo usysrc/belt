@@ -5,7 +5,7 @@ A simple command-line tool that converts key-value arguments to JSON output.
 ## Installation
 
 ```bash
-go install github.com/usysrc/proto/jo@latest
+go install codeberg.org/usysrc/belt/jo@latest
 ```
 
 ## Usage

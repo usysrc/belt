@@ -1,4 +1,4 @@
-module github.com/usysrc/proto/jo
+module codeberg.org/usysrc/belt/jo
 
 go 1.24.4
 
