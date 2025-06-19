@@ -1,6 +1,6 @@
 package main
 
-import "github.com/usysrc/hex/cmd"
+import "codeberg.org/usysrc/belt/hex/cmd"
 
 func main() {
 	cmd.Execute()

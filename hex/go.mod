@@ -1,4 +1,4 @@
-module github.com/usysrc/hex
+module codeberg.org/usysrc/belt/hex
 
 go 1.22
 

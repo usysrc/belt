@@ -3,8 +3,8 @@ package cmd
 import (
 	"os"
 
+	view "codeberg.org/usysrc/belt/hex/internal/viewer"
 	"github.com/spf13/cobra"
-	view "github.com/usysrc/hex/internal/viewer"
 )
 
 var width int
