@@ -1,4 +1,4 @@
-module github.com/usysrc/serve
+module codeberg.org/usysrc/belt/serve
 
 go 1.21.0
 
