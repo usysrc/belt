@@ -2,12 +2,14 @@ package cmd
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"strings"
 
+	"github.com/charmbracelet/fang"
 	"github.com/spf13/cobra"
 )
 
@@ -69,18 +71,18 @@ func ProcessArgs(args []string) (map[string]any, error) {
 func ReadStdinArgs(reader io.Reader) ([]string, error) {
 	args := make([]string, 0)
 	scanner := bufio.NewScanner(reader)
-	
+
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		if line != "" {
 			args = append(args, line)
 		}
 	}
-	
+
 	if err := scanner.Err(); err != nil {
 		return nil, fmt.Errorf("error reading from stdin: %w", err)
 	}
-	
+
 	return args, nil
 }
 
@@ -110,6 +112,7 @@ using bracket notation.`,
 
   # Combined stdin and command-line arguments
   echo "database[host]=localhost" | jo database[port]=5432 debug=true`,
+	Args: cobra.ArbitraryArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var allArgs []string
 
@@ -130,7 +133,7 @@ using bracket notation.`,
 		}
 
 		// Add command-line arguments
-		allArgs = append(allArgs, args...)
+		allArgs = append(allArgs, args...) // Exclude the command name
 
 		// If no arguments provided from either source, show usage
 		if len(allArgs) == 0 {
@@ -169,5 +172,6 @@ using bracket notation.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() error {
-	return rootCmd.Execute()
+	//rootCmd.ExecuteContext()
+	return fang.Execute(context.Background(), rootCmd)
 }
