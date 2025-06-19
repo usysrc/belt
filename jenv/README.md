@@ -10,7 +10,7 @@ To use jenv, you need to have Go installed on your system. If you haven't instal
 Once you have Go installed, you can install jenv using the following command:
 
 ```bash
-go install github.com/usysrc/jenv@latest
+go install codeberg.org/usysrc/belt/jenv@latest
 ```
 
 This will download the source code and compile the binary. You can find the binary in your `$GOPATH/bin` directory.
