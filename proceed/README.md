@@ -12,7 +12,7 @@ To install the `proceed` CLI program using `go install`, follow these steps:
 
 2. Open a terminal and run the following command to install the `proceed` binary:
    ```sh
-   go install github.com/usysrc/proceed
+   go install codeberg.org/usysrc/belt/proceed
    ```
 
 This will install the `proceed` binary into your Go bin directory, which should be included in your system's PATH environment variable.
