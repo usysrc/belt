@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"codeberg.org/usysrc/belt/obs/cmd"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/usysrc/obs/cmd"
 )
 
 func initConfig() {

@@ -1,4 +1,4 @@
-module github.com/usysrc/obs
+module codeberg.org/usysrc/belt/obs
 
 go 1.23.2
 

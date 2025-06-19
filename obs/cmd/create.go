@@ -5,9 +5,9 @@ import (
 	"io"
 	"os"
 
+	"codeberg.org/usysrc/belt/obs/internal/config"
+	"codeberg.org/usysrc/belt/obs/internal/uri"
 	"github.com/spf13/cobra"
-	"github.com/usysrc/obs/internal/config"
-	"github.com/usysrc/obs/internal/uri"
 )
 
 func NewCreateCmd() *cobra.Command {

@@ -9,7 +9,7 @@ To use obs, you need to have Go installed on your system. If you haven't install
 Once you have Go installed, you can install obs using the following command:
 
 ```bash
-go install github.com/usysrc/obs
+go install codeberg.org/usysrc/belt/obs
 ```
 
 This will download the source code and compile the binary.
