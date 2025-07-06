@@ -1,0 +1,8 @@
+exec urlencode 'hello world'
+stdout '^hello\+world\n$'
+
+exec urlencode 'a/b?c=d&e'
+stdout '^a%2Fb%3Fc%3Dd%26e\n$'
+
+! exec urlencode
+stderr '^Usage: urlencode <string to encode>...\n$'
