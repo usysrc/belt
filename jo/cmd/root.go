@@ -32,32 +32,12 @@ func ProcessArgs(args []string) (map[string]any, error) {
 		keyPart := parts[0] // The part before the first '='
 		value := parts[1]   // The part after the first '='
 
-		// Check for the presence of square brackets to identify nested keys
-		// (e.g., "some_key[sub_key]").
-		openBracketIndex := strings.Index(keyPart, "[")
-		closeBracketIndex := strings.Index(keyPart, "]")
-
-		// If both an opening and closing bracket are found, and the opening bracket
-		// comes before the closing one, treat it as a nested key.
-		if openBracketIndex != -1 && closeBracketIndex != -1 && openBracketIndex < closeBracketIndex {
-			// Extract the main key (e.g., "some_key") and the subkey (e.g., "sub_key").
-			mainKey := keyPart[:openBracketIndex]
-			subKey := keyPart[openBracketIndex+1 : closeBracketIndex]
-
-			// Ensure that the value associated with the `mainKey` in our `output` map
-			// is itself a map. If it doesn't exist, or if it's currently a non-map type
-			// (e.g., if "mainKey=simple_value" was processed earlier),
-			// initialize or re-initialize it as a new map.
-			// This handles cases where a simple key might be later turned into a parent
-			// for a nested key, or vice-versa, adhering to JSON's last-assignment-wins rule.
-			nestedMap, ok := output[mainKey].(map[string]any)
-			if !ok {
-				nestedMap = make(map[string]any)
-				output[mainKey] = nestedMap
+		// Parse nested keys (e.g., "user[name]" or "users[123][name]")
+		if strings.Contains(keyPart, "[") && strings.Contains(keyPart, "]") {
+			err := setNestedValue(output, keyPart, value)
+			if err != nil {
+				return nil, err
 			}
-
-			// Add the subKey and its value to the nested map.
-			nestedMap[subKey] = value
 		} else {
 			// If no valid nested key format is found, treat it as a simple key-value pair.
 			output[keyPart] = value
@@ -65,6 +45,90 @@ func ProcessArgs(args []string) (map[string]any, error) {
 	}
 
 	return output, nil
+}
+
+// setNestedValue sets a value at a nested key path (e.g., "user[name]" or "users[123][name]")
+func setNestedValue(output map[string]any, keyPath string, value string) error {
+	// Parse the key path to extract all keys
+	keys, err := parseKeyPath(keyPath)
+	if err != nil {
+		return err
+	}
+
+	// Navigate through the nested structure, creating maps as needed
+	current := output
+	for i, key := range keys {
+		if i == len(keys)-1 {
+			// Last key, set the value
+			current[key] = value
+		} else {
+			// Not the last key, ensure we have a map to navigate into
+			if existing, exists := current[key]; exists {
+				if nestedMap, ok := existing.(map[string]any); ok {
+					current = nestedMap
+				} else {
+					// Override non-map value with a new map
+					newMap := make(map[string]any)
+					current[key] = newMap
+					current = newMap
+				}
+			} else {
+				// Create new map
+				newMap := make(map[string]any)
+				current[key] = newMap
+				current = newMap
+			}
+		}
+	}
+
+	return nil
+}
+
+// parseKeyPath parses a key path like "user[name]" or "users[123][name]" into individual keys
+func parseKeyPath(keyPath string) ([]string, error) {
+	var keys []string
+	current := ""
+	inBracket := false
+
+	for _, char := range keyPath {
+		switch char {
+		case '[':
+			if inBracket {
+				return nil, fmt.Errorf("invalid key path '%s': nested brackets not properly closed", keyPath)
+			}
+			if current != "" {
+				keys = append(keys, current)
+				current = ""
+			}
+			inBracket = true
+		case ']':
+			if !inBracket {
+				return nil, fmt.Errorf("invalid key path '%s': closing bracket without opening bracket", keyPath)
+			}
+			if current == "" {
+				return nil, fmt.Errorf("invalid key path '%s': empty key in brackets", keyPath)
+			}
+			keys = append(keys, current)
+			current = ""
+			inBracket = false
+		default:
+			current += string(char)
+		}
+	}
+
+	if inBracket {
+		return nil, fmt.Errorf("invalid key path '%s': unclosed bracket", keyPath)
+	}
+
+	if current != "" {
+		keys = append(keys, current)
+	}
+
+	if len(keys) == 0 {
+		return nil, fmt.Errorf("invalid key path '%s': no keys found", keyPath)
+	}
+
+	return keys, nil
 }
 
 // ReadStdinArgs reads key-value pairs from stdin
