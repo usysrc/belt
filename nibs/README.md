@@ -16,7 +16,7 @@
 
 ## Installation
 
-1. Install with go: 
+1. Install with go:
 ```sh
 go install codeberg.org/usysrc/belt/nibs
 ```
@@ -24,14 +24,14 @@ go install codeberg.org/usysrc/belt/nibs
 ## Usage
 
 ### Add libraries
-> [!warning]
-> *currently only supporting hump*
 
 Go to your LÖVE project directory and run:
 
 ```shell
 nibs add hump
 ```
+
+This will clone the hump library into your project folder.
 
 ### Bundle
 Go to your LÖVE project directory and run:

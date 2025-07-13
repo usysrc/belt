@@ -9,6 +9,7 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
+// We usually want all files from hump so we will clone it into our project folder and remove the .git subdirectory
 func Hump() {
 	// Repository URL
 	repoURL := "https://github.com/vrld/hump.git"
@@ -31,6 +32,12 @@ func Hump() {
 
 	if err != nil {
 		log.Fatalf("Failed to clone repository: %v", err)
+	}
+
+	// remove the .git directory
+	err = os.RemoveAll(filepath.Join(humpDir, ".git"))
+	if err != nil {
+		log.Fatalf("Failed to remove .git directory: %v", err)
 	}
 
 	fmt.Println("Successfully cloned vrld/hump repository")

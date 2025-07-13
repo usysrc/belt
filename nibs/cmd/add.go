@@ -8,8 +8,9 @@ import (
 )
 
 var addCmd = &cobra.Command{
-	Use:   "add [file or directory]",
-	Short: "Add a file or directory to the project",
+	Use:   "add [battery]",
+	Long:  "Vendors a battery(library, file, folder) to your current project folder. Currently supports hump and pico.",
+	Short: "add a battery to project",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		whatToAdd := args[0]

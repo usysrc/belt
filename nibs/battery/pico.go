@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 )
 
+// We only want the pico.lua file from the pico repository, so we just download it
 func Pico() {
 	fileURL := "https://codeberg.org/usysrc/labs/raw/branch/main/pico/pico.lua"
 	fileName := "pico.lua"
