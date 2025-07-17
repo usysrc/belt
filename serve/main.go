@@ -12,7 +12,7 @@ func main() {
 	var port string
 
 	rootCmd := &cobra.Command{
-		Use:   "file-server",
+		Use:   "serve",
 		Short: "Start the server",
 		Run: func(_ *cobra.Command, _ []string) {
 			if err := startFileServer(port); err != nil {
