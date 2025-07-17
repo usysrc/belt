@@ -13,9 +13,6 @@ How it looks:
 
 ## Installation
 
-
-Needs golang 1.21+ installed.
-
 ```bash
   go install codeberg.org/usysrc/belt/hasenfetch@latest
 ```
