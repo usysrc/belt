@@ -16,7 +16,7 @@ jobs:
   build-and-check-go:
     # Use a runner with the 'docker' label, which is common on Codeberg.
     # This indicates the job will run inside a Docker container.
-    runs-on: docker
+    runs-on: codeberg-tiny
 
     # Define the steps to execute in this job
     steps:
