@@ -1,0 +1,32 @@
+# .forgejo/workflows/nix-build-check.yaml
+
+name: Nix Build Check
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+
+jobs:
+  nix-build:
+    runs-on: codeberg-tiny
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Nix needs a full clone
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Build with Nix
+        run: |
+          echo "Building all packages with Nix..."
+          nix build
+          echo "Nix build completed successfully."
