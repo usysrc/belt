@@ -21,7 +21,8 @@ jobs:
       - name: Install Nix
         uses: https://github.com/nixbuild/nix-quick-install-action@v27
         with:
-          install_flags: "--no-daemon"
+          nix_conf: |
+            build-users-group =
 
       - name: Build with Nix
         run: |
