@@ -2,43 +2,35 @@
 
 name: Go Build Error Check
 
-# Trigger the workflow on pushes to any branch and on pull requests
 on:
   push:
     branches:
       - main
       - master
-      - develop # Add any other branches you want to monitor
+      - develop
   pull_request:
 
-# Define a single job for building and checking Go projects
 jobs:
   build-and-check-go:
-    # Use a runner with the 'docker' label, which is common on Codeberg.
-    # This indicates the job will run inside a Docker container.
     runs-on: codeberg-tiny
 
-    # Define the steps to execute in this job
     steps:
-      # Step 1: Check out the repository code
-      # This action makes your repository's files available to the workflow.
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          # Nix needs to fetch the flake inputs, which are git repositories.
-          # Fetch all history for all branches and tags.
-          fetch-depth: 0
 
-      # Step 2: Build Go projects using Nix
-      # We specify the Docker container image at the step level using 'container'.
-      - name: Build with Nix
-        container:
-          image: nixos/nix:latest # Specify the Docker image for this step
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build all Go modules
         run: |
-          echo "Building all packages with Nix..."
-          # This command builds the default package defined in flake.nix.
-          # The default package is a symlinkJoin of all the tools, so this
-          # effectively builds all Go modules defined in the flake.
-          # It will fail if any of the modules have build errors.
-          nix build
-          echo "Nix build completed successfully."
+          set -e
+          echo "Searching for and building all Go modules..."
+          for dir in $(find . -name "go.mod" -exec dirname {} \;); do
+            if [ "$dir" != "." ]; then
+              echo "--- Building module in $dir ---"
+              (cd "$dir" && go mod tidy && go build ./...)
+            fi
+          done
+          echo "All Go modules built successfully."
