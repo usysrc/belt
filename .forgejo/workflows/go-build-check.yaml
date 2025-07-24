@@ -1,0 +1,45 @@
+# .forgejo/workflows/go-build-check.yaml
+
+name: Go Build Error Check
+
+# Trigger the workflow on pushes to any branch and on pull requests
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop # Add any other branches you want to monitor
+  pull_request:
+
+# Define a single job for building and checking Go projects
+jobs:
+  build-and-check-go:
+    # Use a runner with the 'docker' label, which is common on Codeberg.
+    # This indicates the job will run inside a Docker container.
+    runs-on: docker
+
+    # Define the steps to execute in this job
+    steps:
+      # Step 1: Check out the repository code
+      # This action makes your repository's files available to the workflow.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Build and check Go projects using the Nix development shell
+      # We use the 'nixos/nix:latest' Docker image, which comes with Nix pre-installed.
+      # The 'run' command executes within this container.
+      - name: Run Go Build and Check for Errors
+        uses: docker://nixos/nix:latest
+        run: |
+          # Enter the Nix development shell defined in your flake.nix.
+          # The '--command' flag ensures that after setting up the environment,
+          # it immediately executes the subsequent command and exits.
+          # This is essential for non-interactive CI environments.
+          nix develop --command sh -c "
+            echo 'Attempting to build all Go modules...'
+            # Run 'go build ./...' to compile all Go packages in the current directory
+            # and its subdirectories. This command will exit with a non-zero status
+            # if any build errors are found, causing the CI step to fail.
+            go build ./...
+            echo 'Go build completed successfully.'
+          "
