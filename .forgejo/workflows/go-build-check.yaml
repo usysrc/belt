@@ -24,22 +24,21 @@ jobs:
       # This action makes your repository's files available to the workflow.
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Nix needs to fetch the flake inputs, which are git repositories.
+          # Fetch all history for all branches and tags.
+          fetch-depth: 0
 
-      # Step 2: Build and check Go projects using the Nix development shell
-      # We use the 'nixos/nix:latest' Docker image, which comes with Nix pre-installed.
-      # The 'run' command executes within this container.
-      - name: Run Go Build and Check for Errors
-        uses: docker://nixos/nix:latest
+      # Step 2: Build Go projects using Nix
+      # We specify the Docker container image at the step level using 'container'.
+      - name: Build with Nix
+        container:
+          image: nixos/nix:latest # Specify the Docker image for this step
         run: |
-          # Enter the Nix development shell defined in your flake.nix.
-          # The '--command' flag ensures that after setting up the environment,
-          # it immediately executes the subsequent command and exits.
-          # This is essential for non-interactive CI environments.
-          nix develop --command sh -c "
-            echo 'Attempting to build all Go modules...'
-            # Run 'go build ./...' to compile all Go packages in the current directory
-            # and its subdirectories. This command will exit with a non-zero status
-            # if any build errors are found, causing the CI step to fail.
-            go build ./...
-            echo 'Go build completed successfully.'
-          "
+          echo "Building all packages with Nix..."
+          # This command builds the default package defined in flake.nix.
+          # The default package is a symlinkJoin of all the tools, so this
+          # effectively builds all Go modules defined in the flake.
+          # It will fail if any of the modules have build errors.
+          nix build
+          echo "Nix build completed successfully."
