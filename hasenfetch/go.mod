@@ -1,6 +1,6 @@
 module codeberg.org/usysrc/belt/hasenfetch
 
-go 1.24.4
+go 1.24.5
 
 require github.com/mackerelio/go-osstat v0.2.4
 
