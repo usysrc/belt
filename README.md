@@ -6,7 +6,23 @@ A collection of command-line tools written in Go for my personal computing, DevO
 > These tools are primarily for my personal use and may not be rigorously tested, production-ready, or extensively documented. Use them at your own discretion and risk. They may evolve rapidly or break without notice.
 > If a tool within this collection becomes popular, it might be moved to a separate repository for further development.
 
+## Installation
+
+### Nix
+
+This repository is a [Nix flake](https://nixos.wiki/wiki/Flakes).
+
+You can run any of the tools by using `nix run`.
+
+For example, to run `hasenfetch`:
+
+```shell
+nix run git+https://codeberg.org/usysrc/belt.git#hasenfetch
+```
+
 ## Tools
+
+Here is a list of all the tools available:
 
 *   **hasenfetch**: minimal system information
 *   **hex**: hex viewer
