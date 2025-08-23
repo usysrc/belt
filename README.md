@@ -6,7 +6,7 @@ A collection of command-line tools written in Go for my personal computing, DevO
 > These tools are primarily for my personal use and may not be rigorously tested, production-ready, or extensively documented. Use them at your own discretion and risk. They may evolve rapidly or break without notice.
 > If a tool within this collection becomes popular, it might be moved to a separate repository for further development.
 
-## Installation
+## Installing and Running Tools
 
 ### Nix
 
@@ -18,6 +18,16 @@ For example, to run `hasenfetch`:
 
 ```shell
 nix run git+https://codeberg.org/usysrc/belt.git#hasenfetch
+```
+
+### Go
+
+If you have Go installed and GOBIN in your PATH, you can install any of the tools by using `go install`.
+
+For example, to run `hasenfetch`:
+
+```shell
+go install codeberg.org/usysrc/belt/hasenfetch@latest
 ```
 
 ## Tools
