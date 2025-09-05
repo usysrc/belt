@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Set the shell option for extended globbing to exclude certain directories
+shopt -s extglob
+
 # Define the base directory where your tools are located within the repo.
 # This assumes the script is run from the 'belt' directory, or the 'belt' directory
 # is the parent of the directories containing your Go tools.
@@ -11,7 +14,7 @@ echo "" # Add a blank line for better separation
 
 # Iterate through each subdirectory in the TOOLS_BASE_DIR
 for tool_dir in "$TOOLS_BASE_DIR"/*/; do
-    if [ -d "$tool_dir" ]; then # Check if it's actually a directory
+    if [[ "$tool_dir" != "./result/" && "$tool_dir" != "./scripts/" ]]; then # Check if it's actually a tool
         tool_name=$(basename "$tool_dir")
 
         echo -n "  $tool_name... " # -n prevents newline
