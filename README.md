@@ -1,6 +1,6 @@
 # belt
 
-A collection of command-line tools written in Go for my personal computing, DevOps, sysadmin, or software engineering needs.
+A collection of tiny command-line tools written in Go.
 
 > [!CAUTION]
 > These tools are primarily for my personal use and may not be rigorously tested, production-ready, or extensively documented. Use them at your own discretion and risk. They may evolve rapidly or break without notice.
