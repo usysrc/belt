@@ -10,3 +10,8 @@ update:
   else
       echo "Update cancelled."
   fi
+
+push:
+  #!/bin/sh
+  git push origin HEAD
+  git push github HEAD
