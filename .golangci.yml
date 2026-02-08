@@ -19,8 +19,6 @@ linters:
     - forbidigo
     - forcetypeassert
     - funlen
-    - gochecknoglobals
-    - gochecknoinits
     - gocognit
     - goconst
     - gocritic
@@ -52,7 +50,6 @@ linters:
     - prealloc
     - predeclared
     - promlinter
-    - revive
     - rowserrcheck
     - sqlclosecheck
     - staticcheck
@@ -87,3 +84,8 @@ linters-settings:
   cyclop:
     max-complexity: 30
     package-average: 15.0
+issues:
+  exclude-rules:
+    - path: '(^|/)cmd/.*\.go$'
+      linters:
+        - gochecknoglobals

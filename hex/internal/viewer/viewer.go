@@ -1,9 +1,12 @@
+// Package view provides the viewer for the hex viewer CLI application.
 package view
 
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/viewport"
@@ -17,12 +20,14 @@ var (
 	titleStyle = func() lipgloss.Style {
 		b := lipgloss.RoundedBorder()
 		b.Right = "├"
+
 		return lipgloss.NewStyle().BorderStyle(b).Padding(0, 1)
 	}()
 
 	infoStyle = func() lipgloss.Style {
 		b := lipgloss.RoundedBorder()
 		b.Left = "┤"
+
 		return titleStyle.Copy().BorderStyle(b)
 	}()
 )
@@ -96,76 +101,100 @@ func (m model) View() string {
 	if !m.ready {
 		return "\n  Initializing..."
 	}
+
 	return fmt.Sprintf("%s\n%s\n%s", m.headerView(), m.viewport.View(), m.footerView())
 }
 
 func (m model) headerView() string {
 	title := titleStyle.Render("hex")
-	line := strings.Repeat("─", max(0, m.viewport.Width-lipgloss.Width(title)))
+	line := strings.Repeat("─", maximum(0, m.viewport.Width-lipgloss.Width(title)))
+
 	return lipgloss.JoinHorizontal(lipgloss.Center, title, line)
 }
 
 func (m model) footerView() string {
 	info := infoStyle.Render(fmt.Sprintf("%3.f%%", m.viewport.ScrollPercent()*100))
-	line := strings.Repeat("─", max(0, m.viewport.Width-lipgloss.Width(info)))
+	line := strings.Repeat("─", maximum(0, m.viewport.Width-lipgloss.Width(info)))
+
 	return lipgloss.JoinHorizontal(lipgloss.Center, line, info)
 }
 
-func max(a, b int) int {
+func maximum(a, b int) int {
 	if a > b {
 		return a
 	}
+
 	return b
 }
 
-func CreateView(filename string, width int) {
-	// Open the file
-	file, err := os.Open(filename)
-	if err != nil {
-		fmt.Printf("Error opening file: %s\n", err)
-		os.Exit(1)
-	}
-	defer file.Close()
-
-	// Read and display in hex
+func readFileAsHex(file *os.File, width int) string {
 	var hexBuilder strings.Builder
+
 	buffer := make([]byte, width)
 	for {
 		bytesRead, err := file.Read(buffer)
 		if err == io.EOF {
 			break
 		}
+
 		if err != nil {
 			hexBuilder.WriteString(fmt.Sprintf("Error reading file: %s\n", err))
+
 			break
 		}
 
 		// Print hex data
-		for i := 0; i < bytesRead; i++ {
+		for i := range bytesRead {
 			hexBuilder.WriteString(fmt.Sprintf("%02x ", buffer[i]))
 		}
 
 		// Print ASCII characters (if printable)
 		hexBuilder.WriteString(" ")
-		for i := 0; i < bytesRead; i++ {
+
+		for i := range bytesRead {
 			if buffer[i] >= 32 && buffer[i] <= 126 {
 				hexBuilder.WriteString(fmt.Sprintf("%c", buffer[i]))
 			} else {
 				hexBuilder.WriteString(".")
 			}
 		}
-		hexBuilder.WriteString("\n")
 
+		hexBuilder.WriteString("\n")
 	}
 
+	return hexBuilder.String()
+}
+
+func CreateView(filename string, width int) {
+	// Validate the filename to prevent directory traversal attacks
+	cleanPath := filepath.Clean(filename)
+	if filepath.IsAbs(cleanPath) {
+		cleanPath = filepath.Base(cleanPath)
+	}
+
+	// Open the file
+	file, err := os.Open(cleanPath)
+	if err != nil {
+		log.Printf("Error opening file: %s\n", err)
+
+		return
+	}
+
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Printf("Error closing file: %s\n", err)
+		}
+	}()
+
+	hexContent := readFileAsHex(file, width)
+
 	p := tea.NewProgram(
-		model{content: hexBuilder.String()},
+		model{content: hexContent},
 		tea.WithAltScreen(),       // turn on alternative full screen
 		tea.WithMouseCellMotion(), // turn on mouse support so we can track the mouse wheel
 	)
 
 	if _, err := p.Run(); err != nil {
-		fmt.Println("could not run program:", err)
-		os.Exit(1)
+		log.Printf("could not run program: %s", err)
 	}
 }
