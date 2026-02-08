@@ -1,3 +1,4 @@
+// Package main provides a cute system information display tool.
 package main
 
 import (
@@ -15,8 +16,9 @@ import (
 func getSystemUptime() (time.Duration, error) {
 	uptimeDuration, err := uptime.Get()
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to get system uptime: %w", err)
 	}
+
 	return uptimeDuration, nil
 }
 
@@ -27,9 +29,11 @@ func main() {
 		`(='.'=)  `,
 		`(")_(")  `,
 	}
+
 	currentUser, err := user.Current()
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		log.Printf("Error: %v\n", err)
+
 		return
 	}
 
@@ -37,10 +41,12 @@ func main() {
 	output.WriteString(bunny[0])
 	output.WriteString(currentUser.Username)
 	output.WriteString("@")
+
 	hostname, err := os.Hostname()
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	output.WriteString(hostname)
 	output.WriteString("\n")
 
@@ -54,10 +60,12 @@ func main() {
 
 	uptime, err := getSystemUptime()
 	if err != nil {
-		fmt.Println("Error:", err)
+		log.Println("Error:", err)
+
 		return
 	}
+
 	output.WriteString(bunny[3] + fmt.Sprintf("%v\n", uptime))
 
-	fmt.Print(output.String())
+	log.Print(output.String())
 }
