@@ -7,6 +7,8 @@ import (
 )
 
 func TestProcessArgs(t *testing.T) {
+	t.Parallel()
+	//nolint:govet
 	tests := []struct {
 		name     string
 		args     []string
@@ -65,17 +67,21 @@ func TestProcessArgs(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			result, err := ProcessArgs(tt.args)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("ProcessArgs() expected error but got none")
 				}
+
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("ProcessArgs() unexpected error: %v", err)
+
 				return
 			}
 
@@ -87,6 +93,9 @@ func TestProcessArgs(t *testing.T) {
 }
 
 func TestNestedKeyOverrides(t *testing.T) {
+	t.Parallel()
+
+	//nolint:govet
 	tests := []struct {
 		name     string
 		args     []string
@@ -112,9 +121,12 @@ func TestNestedKeyOverrides(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			result, err := ProcessArgs(tt.args)
 			if err != nil {
 				t.Errorf("ProcessArgs() unexpected error: %v", err)
+
 				return
 			}
 
@@ -126,6 +138,8 @@ func TestNestedKeyOverrides(t *testing.T) {
 }
 
 func TestReadStdinArgs(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name     string
 		input    string
@@ -160,6 +174,8 @@ func TestReadStdinArgs(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			reader := strings.NewReader(tt.input)
 			result, err := ReadStdinArgs(reader)
 
@@ -167,11 +183,13 @@ func TestReadStdinArgs(t *testing.T) {
 				if err == nil {
 					t.Errorf("ReadStdinArgs() expected error but got none")
 				}
+
 				return
 			}
 
 			if err != nil {
 				t.Errorf("ReadStdinArgs() unexpected error: %v", err)
+
 				return
 			}
 
@@ -183,6 +201,8 @@ func TestReadStdinArgs(t *testing.T) {
 }
 
 func TestConvertToJSON(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name     string
 		input    map[string]any
@@ -216,17 +236,21 @@ func TestConvertToJSON(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			result, err := ConvertToJSON(tt.input)
 
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("ConvertToJSON() expected error but got none")
 				}
+
 				return
 			}
 
 			if err != nil {
 				t.Errorf("ConvertToJSON() unexpected error: %v", err)
+
 				return
 			}
 

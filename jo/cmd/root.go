@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"strings"
 
@@ -13,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ProcessArgs processes key-value arguments and returns a map
+// ProcessArgs processes key-value arguments and returns a map.
 func ProcessArgs(args []string) (map[string]any, error) {
 	output := make(map[string]any)
 
@@ -47,7 +48,7 @@ func ProcessArgs(args []string) (map[string]any, error) {
 	return output, nil
 }
 
-// setNestedValue sets a value at a nested key path (e.g., "user[name]" or "users[123][name]")
+// setNestedValue sets a value at a nested key path (e.g., "user[name]" or "users[123][name]").
 func setNestedValue(output map[string]any, keyPath string, value string) error {
 	// Parse the key path to extract all keys
 	keys, err := parseKeyPath(keyPath)
@@ -57,6 +58,7 @@ func setNestedValue(output map[string]any, keyPath string, value string) error {
 
 	// Navigate through the nested structure, creating maps as needed
 	current := output
+
 	for i, key := range keys {
 		if i == len(keys)-1 {
 			// Last key, set the value
@@ -84,9 +86,10 @@ func setNestedValue(output map[string]any, keyPath string, value string) error {
 	return nil
 }
 
-// parseKeyPath parses a key path like "user[name]" or "users[123][name]" into individual keys
+// parseKeyPath parses a key path like "user[name]" or "users[123][name]" into individual keys.
 func parseKeyPath(keyPath string) ([]string, error) {
 	var keys []string
+
 	current := ""
 	inBracket := false
 
@@ -96,18 +99,22 @@ func parseKeyPath(keyPath string) ([]string, error) {
 			if inBracket {
 				return nil, fmt.Errorf("invalid key path '%s': nested brackets not properly closed", keyPath)
 			}
+
 			if current != "" {
 				keys = append(keys, current)
 				current = ""
 			}
+
 			inBracket = true
 		case ']':
 			if !inBracket {
 				return nil, fmt.Errorf("invalid key path '%s': closing bracket without opening bracket", keyPath)
 			}
+
 			if current == "" {
 				return nil, fmt.Errorf("invalid key path '%s': empty key in brackets", keyPath)
 			}
+
 			keys = append(keys, current)
 			current = ""
 			inBracket = false
@@ -131,7 +138,7 @@ func parseKeyPath(keyPath string) ([]string, error) {
 	return keys, nil
 }
 
-// ReadStdinArgs reads key-value pairs from stdin
+// ReadStdinArgs reads key-value pairs from stdin.
 func ReadStdinArgs(reader io.Reader) ([]string, error) {
 	args := make([]string, 0)
 	scanner := bufio.NewScanner(reader)
@@ -150,12 +157,13 @@ func ReadStdinArgs(reader io.Reader) ([]string, error) {
 	return args, nil
 }
 
-// ConvertToJSON converts a map to pretty-printed JSON
+// ConvertToJSON converts a map to pretty-printed JSON.
 func ConvertToJSON(data map[string]any) (string, error) {
 	jsonData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return "", fmt.Errorf("error marshalling JSON: %w", err)
 	}
+
 	return string(jsonData), nil
 }
 
@@ -188,12 +196,12 @@ using bracket notation.`,
 
 		hasStdin := (stat.Mode() & os.ModeCharDevice) == 0
 		if hasStdin {
-			// Read from stdin
-			stdinArgs, err := ReadStdinArgs(os.Stdin)
-			if err != nil {
+			var stdinArgs []string
+			if stdinArgs, err = ReadStdinArgs(os.Stdin); err != nil {
 				return err
 			}
 			allArgs = append(allArgs, stdinArgs...)
+
 		}
 
 		// Add command-line arguments
@@ -209,7 +217,9 @@ using bracket notation.`,
 		for _, arg := range allArgs {
 			// Quick validation check
 			if !strings.Contains(arg, "=") {
-				fmt.Fprintf(os.Stderr, "Warning: Skipping invalid argument format '%s'. Expected 'key=value' or 'key[subkey]=value'.\n", arg)
+				str := "Warning: Skipping invalid argument format '%s'. Expected 'key=value' or 'key[subkey]=value'.\n"
+				fmt.Fprintf(os.Stderr, str, arg)
+
 				continue
 			}
 			validArgs = append(validArgs, arg)
@@ -228,7 +238,8 @@ using bracket notation.`,
 		}
 
 		// Print the resulting JSON string to standard output
-		fmt.Println(jsonStr)
+		log.Println(jsonStr)
+
 		return nil
 	},
 }
@@ -236,6 +247,10 @@ using bracket notation.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() error {
-	//rootCmd.ExecuteContext()
-	return fang.Execute(context.Background(), rootCmd)
+	err := fang.Execute(context.Background(), rootCmd)
+	if err != nil {
+		return fmt.Errorf("error executing command: %w", err)
+	}
+
+	return nil
 }
