@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewSearchCmd(t *testing.T) {
@@ -29,4 +30,17 @@ func TestNewSearchCmd(t *testing.T) {
 	if err.Error() != "query can not be empty" {
 		t.Fatalf("expected \"%s\" got \"%s\"", "query can not be empty", err.Error())
 	}
+}
+
+func TestNewSearchCmd_NoArgs(t *testing.T) {
+	t.Parallel()
+
+	cfg := viper.New()
+	cfg.Set("vault", "testVault")
+	cmd := NewSearchCmd(cfg)
+	cmd.SetArgs([]string{})
+
+	err := cmd.Execute()
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "accepts 1 arg(s), received 0")
 }

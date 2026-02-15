@@ -14,6 +14,7 @@ func NewSearchCmd(cfg *viper.Viper) *cobra.Command {
 		Use:   "search",
 		Short: "Search in vault",
 		Long:  `Search for content in your Obsidian vault using the specified query.`,
+		Args:  cobra.ExactArgs(1),
 
 		RunE: func(cmd *cobra.Command, args []string) error {
 			vault, err := config.GetVault(cfg)
