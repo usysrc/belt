@@ -9,7 +9,6 @@ import (
 )
 
 func NewOpenCmd() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "open",
 		Short: "Open an existing note",
@@ -18,16 +17,19 @@ func NewOpenCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			vault, err := config.GetVault()
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to get vault from config: %w", err)
 			}
+
 			targetFolder, err := config.GetTargetFolder()
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to get target folder from config: %w", err)
 			}
+
 			noteName := args[0]
 			if noteName == "" {
 				return fmt.Errorf("note name cannot be empty")
 			}
+
 			return uri.Execute("open", vault, noteName, targetFolder, "")
 		},
 	}

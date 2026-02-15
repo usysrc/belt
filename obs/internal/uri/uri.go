@@ -1,6 +1,7 @@
 package uri
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"os/exec"
@@ -34,6 +35,7 @@ func buildURI(params URIParams) string {
 	encodedContent := url.PathEscape(params.Content)
 
 	var paramName string
+
 	switch params.Action {
 	case "search":
 		paramName = "query"
@@ -57,12 +59,17 @@ func openURI(uri string) error {
 
 	switch runtime.GOOS {
 	case "darwin":
-		cmd = exec.Command("open", uri)
+		cmd = exec.CommandContext(context.Background(), "open", uri)
 	case "windows":
-		cmd = exec.Command("cmd", "/c", "start", uri)
+		cmd = exec.CommandContext(context.Background(), "cmd", "/c", "start", uri)
 	default: // Linux and others
-		cmd = exec.Command("xdg-open", uri)
+		cmd = exec.CommandContext(context.Background(), "xdg-open", uri)
 	}
 
-	return cmd.Run()
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("failed to open URI: %w", err)
+	}
+
+	return nil
 }

@@ -10,17 +10,25 @@ import (
 )
 
 func TestNewConfigCmd(t *testing.T) {
-	homeDir := os.Getenv("HOME")
-	configDir := filepath.Join(homeDir, ".config", "obsidian-cli")
+	t.Parallel()
+	tempDir := t.TempDir()
+	configDir := filepath.Join(tempDir, ".config", "obsidian-cli")
 	configFile := filepath.Join(configDir, "config.yaml")
 
-	// Clean up before and after the test
-	defer os.RemoveAll(configDir)
+	// create the config directory
+	err := os.MkdirAll(configDir, 0750)
+	assert.NoError(t, err)
 
-	cmd := NewConfigCmd()
+	// Clean up any existing config file after the test
+	t.Cleanup(func() {
+		err = os.RemoveAll(configDir)
+		assert.NoError(t, err)
+	})
+
+	cmd := NewConfigCmd(tempDir)
 	cmd.SetArgs([]string{"--vault", "testVault", "--targetFolder", "testFolder"})
 
-	err := cmd.Execute()
+	err = cmd.Execute()
 	assert.NoError(t, err)
 
 	vault := viper.GetString("vault")

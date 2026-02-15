@@ -8,6 +8,8 @@ import (
 )
 
 func TestNewSearchCmd(t *testing.T) {
+	t.Parallel()
+
 	viper.Set("vault", "testVault")
 	viper.Set("targetFolder", "./testFolder")
 	cmd := NewSearchCmd()
@@ -17,11 +19,13 @@ func TestNewSearchCmd(t *testing.T) {
 	assert.Equal(t, `Search for content in your Obsidian vault using the specified query.`, cmd.Long)
 
 	cmd.SetArgs([]string{""})
+
 	err := cmd.Execute()
 	if err == nil {
 		t.Fatalf("expected err got nil")
 	}
-	if err != nil && err.Error() != "query can not be empty" {
+
+	if err.Error() != "query can not be empty" {
 		t.Fatalf("expected \"%s\" got \"%s\"", "query can not be empty", err.Error())
 	}
 }

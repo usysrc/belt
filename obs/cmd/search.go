@@ -9,7 +9,6 @@ import (
 )
 
 func NewSearchCmd() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "search",
 		Short: "Search in vault",
@@ -18,12 +17,14 @@ func NewSearchCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			vault, err := config.GetVault()
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to get vault from config: %w", err)
 			}
+
 			query := args[0]
 			if query == "" {
 				return fmt.Errorf("query can not be empty")
 			}
+
 			return uri.Execute("search", vault, query, "", "")
 		},
 	}

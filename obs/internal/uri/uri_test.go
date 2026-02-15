@@ -5,6 +5,8 @@ import (
 )
 
 func TestBuildURI(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		vault        string
 		param        string
@@ -16,38 +18,41 @@ func TestBuildURI(t *testing.T) {
 			vault:    "myVault",
 			param:    "myParam",
 			action:   "search",
-			expected: "obsidian://search?vault=myVault&query=myParam",
+			expected: "obsidian://search?vault=myVault&query=myParam&content=",
 		},
 		{
 			vault:    "myVault",
 			param:    "myParam",
 			action:   "open",
-			expected: "obsidian://open?vault=myVault&file=myParam",
+			expected: "obsidian://open?vault=myVault&file=myParam&content=",
 		},
 		{
 			vault:        "myVault",
 			param:        "myParam",
 			action:       "open",
 			targetFolder: "myFolder",
-			expected:     "obsidian://open?vault=myVault&file=myFolder/myParam",
+			expected:     "obsidian://open?vault=myVault&file=myFolder/myParam&content=",
 		},
 		{
 			vault:        "my Vault",
 			param:        "my Param",
 			action:       "open",
 			targetFolder: "my Folder",
-			expected:     "obsidian://open?vault=my%20Vault&file=my%20Folder/my%20Param",
+			expected:     "obsidian://open?vault=my%20Vault&file=my%20Folder/my%20Param&content=",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.action, func(t *testing.T) {
+			t.Parallel()
+
 			params := URIParams{
 				Vault:        tt.vault,
 				Param:        tt.param,
 				Action:       tt.action,
 				TargetFolder: tt.targetFolder,
 			}
+
 			got := buildURI(params)
 			if got != tt.expected {
 				t.Errorf("buildURI() = %v, want %v", got, tt.expected)

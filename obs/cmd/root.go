@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +16,7 @@ to perform various operations like creating notes, opening notes, and searching.
 	}
 
 	cmd.AddCommand(
-		NewConfigCmd(),
+		NewConfigCmd(os.Getenv("HOME")),
 		NewCreateCmd(),
 		NewOpenCmd(),
 		NewSearchCmd(),

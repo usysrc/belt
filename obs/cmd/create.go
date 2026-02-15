@@ -11,7 +11,6 @@ import (
 )
 
 func NewCreateCmd() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:     "create",
 		Aliases: []string{"new", "add"},
@@ -21,28 +20,33 @@ func NewCreateCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			vault, err := config.GetVault()
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to get vault from config: %w", err)
 			}
+
 			targetFolder, err := config.GetTargetFolder()
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to get target folder from config: %w", err)
 			}
+
 			noteName := args[0]
 			if noteName == "" {
 				return fmt.Errorf("note name cannot be empty")
 			}
 
 			// Arguments take precedence over stdin
-			noteContent := ""
 			if len(args) > 1 {
-				noteContent = args[1]
-			} else {
-				noteContents, err := io.ReadAll(os.Stdin)
-				if err != nil {
-					return err
-				}
-				noteContent = string(noteContents)
+				noteContent := args[1]
+
+				return uri.Execute("new", vault, noteName, targetFolder, noteContent)
 			}
+
+			note, err := io.ReadAll(os.Stdin)
+			if err != nil {
+				return fmt.Errorf("failed to read note content from stdin: %w", err)
+			}
+
+			noteContent := string(note)
+
 			return uri.Execute("new", vault, noteName, targetFolder, noteContent)
 		},
 	}
