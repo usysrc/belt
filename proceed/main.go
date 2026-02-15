@@ -2,15 +2,15 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"log"
 	"os"
 	"strings"
 )
 
 func main() {
-
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Printf("Do you want to proceed? (y/N): ")
+
+	log.Printf("Do you want to proceed? (y/N): ")
 
 	input, _ := reader.ReadString('\n')
 	input = strings.TrimSpace(input)
