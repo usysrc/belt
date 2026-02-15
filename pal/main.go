@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"log"
 	"os"
 	"strings"
 )
@@ -10,20 +10,25 @@ import (
 func main() {
 	// Read hex values from stdin (each on a new line)
 	scanner := bufio.NewScanner(os.Stdin)
+
 	var hexValues []string
+
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
 			break
 		}
+
 		hexValues = append(hexValues, line)
 	}
 
 	// Create the palette string
-	paletteString := "000:"
+	var paletteString strings.Builder
+	paletteString.WriteString("000:")
+
 	for _, hexValue := range hexValues {
-		paletteString += strings.TrimSpace(hexValue)
+		paletteString.WriteString(strings.TrimSpace(hexValue))
 	}
 
-	fmt.Println(paletteString)
+	log.Println(paletteString.String())
 }
