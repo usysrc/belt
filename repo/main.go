@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net/url"
 	"os"
 	"os/exec"
@@ -36,19 +38,19 @@ var forges = map[string]Forge{
 func main() {
 	remoteURL, err := getRemoteURL()
 	if err != nil {
-		fmt.Println("directory not a repository")
+		log.Println("directory not a repository")
 		os.Exit(1)
 	}
 
 	toplevelDir, err := getGitToplevel()
 	if err != nil {
-		fmt.Println("Error getting git toplevel:", err)
+		log.Println("Error getting git toplevel:", err)
 		os.Exit(1)
 	}
 
 	currentDir, err := os.Getwd()
 	if err != nil {
-		fmt.Println("Error getting current directory:", err)
+		log.Println("Error getting current directory:", err)
 		os.Exit(1)
 	}
 
@@ -56,14 +58,18 @@ func main() {
 	subDir = strings.TrimPrefix(subDir, "/")
 
 	forge, repoPath := detectForge(remoteURL)
+
 	var webURL string
 
 	if subDir != "" {
-		defaultBranch, err := getDefaultBranch()
+		var defaultBranch string
+
+		defaultBranch, err = getDefaultBranch()
 		if err != nil {
-			fmt.Println("Error getting default branch:", err)
+			log.Println("Error getting default branch:", err)
 			os.Exit(1)
 		}
+
 		treeURL := strings.Replace(forge.TreeURL, "{repo}", repoPath, 1)
 		treeURL = strings.Replace(treeURL, "{branch}", defaultBranch, 1)
 		webURL = strings.Replace(treeURL, "{path}", subDir, 1)
@@ -73,47 +79,62 @@ func main() {
 
 	err = openURL(webURL)
 	if err != nil {
-		fmt.Println("Error opening URL:", err)
+		log.Println("Error opening URL:", err)
 		os.Exit(1)
 	}
 
-	fmt.Println("Opening:", webURL)
+	log.Println("Opening:", webURL)
 }
 
+// openURL opens the specified URL in the default web browser.
 func getRemoteURL() (string, error) {
-	cmd := exec.Command("git", "remote", "get-url", "origin")
+	ctx := context.Background()
+	cmd := exec.CommandContext(ctx, "git", "remote", "get-url", "origin")
+
 	output, err := cmd.Output()
 	if err != nil {
 		return "", fmt.Errorf("directory not a repository")
 	}
+
 	return strings.TrimSpace(string(output)), nil
 }
 
+// openURL opens the specified URL in the default web browser.
 func getGitToplevel() (string, error) {
-	cmd := exec.Command("git", "rev-parse", "--show-toplevel")
+	ctx := context.Background()
+	cmd := exec.CommandContext(ctx, "git", "rev-parse", "--show-toplevel")
+
 	output, err := cmd.Output()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("directory not a repository: %w", err)
 	}
+
 	return strings.TrimSpace(string(output)), nil
 }
 
+// getDefaultBranch retrieves the default branch name of the repository.
 func getDefaultBranch() (string, error) {
-	cmd := exec.Command("git", "symbolic-ref", "refs/remotes/origin/HEAD")
+	ctx := context.Background()
+	cmd := exec.CommandContext(ctx, "git", "symbolic-ref", "refs/remotes/origin/HEAD")
+
 	output, err := cmd.Output()
 	if err != nil {
 		// Fallback for older git versions or different remote names
-		cmd = exec.Command("git", "rev-parse", "--abbrev-ref", "origin/HEAD")
+		cmd = exec.CommandContext(ctx, "git", "rev-parse", "--abbrev-ref", "origin/HEAD")
+
 		output, err = cmd.Output()
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("failed to get default branch: %w", err)
 		}
 	}
+
 	branchName := strings.TrimSpace(string(output))
 	branchName = strings.TrimPrefix(branchName, "refs/remotes/origin/")
+
 	return branchName, nil
 }
 
+// openURL opens the specified URL in the default web browser.
 func detectForge(remoteURL string) (Forge, string) {
 	var host, path string
 
