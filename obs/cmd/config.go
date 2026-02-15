@@ -32,7 +32,7 @@ func NewConfigCmd(basePath string) *cobra.Command {
 				return fmt.Errorf("failed to write config: %w", err)
 			}
 
-			log.Printf("Configuration saved: vault = %s, targetFolder = %s\n", vault, targetFolder)
+			fmt.Printf("Configuration saved: vault = %s, targetFolder = %s\n", vault, targetFolder)
 
 			return nil
 		},
