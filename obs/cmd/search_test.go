@@ -10,9 +10,10 @@ import (
 func TestNewSearchCmd(t *testing.T) {
 	t.Parallel()
 
-	viper.Set("vault", "testVault")
-	viper.Set("targetFolder", "./testFolder")
-	cmd := NewSearchCmd()
+	cfg := viper.New()
+	cfg.Set("vault", "testVault")
+	cfg.Set("targetFolder", "./testFolder")
+	cmd := NewSearchCmd(cfg)
 
 	assert.Equal(t, "search", cmd.Use)
 	assert.Equal(t, "Search in vault", cmd.Short)

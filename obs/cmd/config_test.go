@@ -11,6 +11,9 @@ import (
 
 func TestNewConfigCmd(t *testing.T) {
 	t.Parallel()
+
+	cfg := viper.New()
+
 	tempDir := t.TempDir()
 	configDir := filepath.Join(tempDir, ".config", "obsidian-cli")
 	configFile := filepath.Join(configDir, "config.yaml")
@@ -25,14 +28,14 @@ func TestNewConfigCmd(t *testing.T) {
 		assert.NoError(t, err)
 	})
 
-	cmd := NewConfigCmd(tempDir)
+	cmd := NewConfigCmd(tempDir, cfg)
 	cmd.SetArgs([]string{"--vault", "testVault", "--targetFolder", "testFolder"})
 
 	err = cmd.Execute()
 	assert.NoError(t, err)
 
-	vault := viper.GetString("vault")
-	targetFolder := viper.GetString("targetFolder")
+	vault := cfg.GetString("vault")
+	targetFolder := cfg.GetString("targetFolder")
 
 	assert.Equal(t, "testVault", vault)
 	assert.Equal(t, "testFolder", targetFolder)

@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewConfigCmd(basePath string) *cobra.Command {
+func NewConfigCmd(basePath string, cfg *viper.Viper) *cobra.Command {
 	var vault string
 
 	var targetFolder string
@@ -19,8 +19,8 @@ func NewConfigCmd(basePath string) *cobra.Command {
 		Short: "Configure the CLI",
 		Long:  `Configure the CLI with your Obsidian vault name and other settings.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			viper.Set("vault", vault)
-			viper.Set("targetFolder", targetFolder)
+			cfg.Set("vault", vault)
+			cfg.Set("targetFolder", targetFolder)
 
 			configFile := filepath.Join(
 				basePath,
@@ -28,7 +28,7 @@ func NewConfigCmd(basePath string) *cobra.Command {
 				"obsidian-cli",
 				"config.yaml",
 			)
-			if err := viper.WriteConfigAs(configFile); err != nil {
+			if err := cfg.WriteConfigAs(configFile); err != nil {
 				return fmt.Errorf("failed to write config: %w", err)
 			}
 

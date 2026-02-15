@@ -10,9 +10,10 @@ import (
 func TestNewOpenCmd(t *testing.T) {
 	t.Parallel()
 
-	viper.Set("vault", "testVault")
-	viper.Set("targetFolder", "./testFolder")
-	cmd := NewOpenCmd()
+	cfg := viper.New()
+	cfg.Set("vault", "testVault")
+	cfg.Set("targetFolder", "./testFolder")
+	cmd := NewOpenCmd(cfg)
 
 	assert.Equal(t, "open", cmd.Use)
 	assert.Equal(t, "Open an existing note", cmd.Short)

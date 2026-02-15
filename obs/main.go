@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func initConfig() {
+func initConfig(cfg *viper.Viper) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Println(err)
@@ -24,12 +24,12 @@ func initConfig() {
 		os.Exit(1)
 	}
 
-	viper.AddConfigPath(configDir)
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AutomaticEnv()
+	cfg.AddConfigPath(configDir)
+	cfg.SetConfigName("config")
+	cfg.SetConfigType("yaml")
+	cfg.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err != nil {
+	if err := cfg.ReadInConfig(); err != nil {
 		if errors.As(err, &viper.ConfigFileNotFoundError{}) {
 			// Config file not found; ignore error if desired
 			fmt.Printf("Config file not found in %s\n", configDir)
@@ -42,9 +42,15 @@ func initConfig() {
 }
 
 func main() {
-	cobra.OnInitialize(initConfig)
+	cfg := viper.New()
+	cobra.OnInitialize(func() { initConfig(cfg) })
+	home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
-	if err := cmd.NewRootCmd().Execute(); err != nil {
+	if err := cmd.NewRootCmd(home, cfg).Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

@@ -1,13 +1,11 @@
 package cmd
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-func NewRootCmd() *cobra.Command {
-
+func NewRootCmd(basePath string, cfg *viper.Viper) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "obs",
 		Short: "A CLI for interacting with Obsidian",
@@ -16,10 +14,10 @@ to perform various operations like creating notes, opening notes, and searching.
 	}
 
 	cmd.AddCommand(
-		NewConfigCmd(os.Getenv("HOME")),
-		NewCreateCmd(),
-		NewOpenCmd(),
-		NewSearchCmd(),
+		NewConfigCmd(basePath, cfg),
+		NewCreateCmd(cfg),
+		NewOpenCmd(cfg),
+		NewSearchCmd(cfg),
 	)
 
 	return cmd

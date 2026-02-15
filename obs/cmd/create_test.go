@@ -10,9 +10,10 @@ import (
 func TestNewCreateCmd(t *testing.T) {
 	t.Parallel()
 
-	viper.Set("vault", "testVault")
-	viper.Set("targetFolder", "./testFolder")
-	cmd := NewCreateCmd()
+	cfg := viper.New()
+	cfg.Set("vault", "testVault")
+	cfg.Set("targetFolder", "./testFolder")
+	cmd := NewCreateCmd(cfg)
 
 	assert.Equal(t, "create", cmd.Use)
 	assert.ElementsMatch(t, []string{"new", "add"}, cmd.Aliases)
