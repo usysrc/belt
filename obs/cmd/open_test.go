@@ -16,8 +16,9 @@ func TestNewOpenCmd(t *testing.T) {
 	cmd := NewOpenCmd(cfg)
 
 	assert.Equal(t, "open", cmd.Use)
-	assert.Equal(t, "Open an existing note", cmd.Short)
-	assert.Equal(t, `Open an existing note in your Obsidian vault using the specified file name.`, cmd.Long)
+	assert.Equal(t, "Open an existing note in Obsidian (GUI required)", cmd.Short)
+	assert.Equal(t, `Open an existing note in your Obsidian vault using the specified file name (GUI required).`, cmd.Long)
+	assert.Equal(t, "gui", cmd.Annotations["mode"])
 
 	cmd.SetArgs([]string{""})
 

@@ -12,9 +12,12 @@ import (
 func NewOpenCmd(cfg *viper.Viper) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "open",
-		Short: "Open an existing note",
-		Long:  `Open an existing note in your Obsidian vault using the specified file name.`,
+		Short: "Open an existing note in Obsidian (GUI required)",
+		Long:  `Open an existing note in your Obsidian vault using the specified file name (GUI required).`,
 		Args:  cobra.ExactArgs(1),
+		Annotations: map[string]string{
+			"mode": "gui",
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			vault, err := config.GetVault(cfg)
 			if err != nil {

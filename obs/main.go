@@ -43,7 +43,9 @@ func initConfig(cfg *viper.Viper) {
 
 func main() {
 	cfg := viper.New()
+
 	cobra.OnInitialize(func() { initConfig(cfg) })
+
 	home, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Println(err)

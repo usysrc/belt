@@ -19,17 +19,38 @@ This will download the source code and compile the binary.
 You need to first set the default vault and the default folder for new notes.
 
 ```bash
-obs config --vault "mytestvault" --targetFolder "general"
+obs config --vault "mytestvault" --targetFolder "general" --vaultPath "/absolute/path/to/mytestvault"
 
 ```
 
-### Creating and opening notes
+You can also set the vault path using an environment variable:
+
+```bash
+export OBS_VAULT_PATH="/absolute/path/to/mytestvault"
+```
+
+### Commands
+
+| Command | Mode | Description |
+| --- | --- | --- |
+| `obs create <name> [content]` | stdio | Create a note via Obsidian URI |
+| `obs search <query>` | stdio | Search your vault via Obsidian URI |
+| `obs get <name>` | stdio | Print note content to stdout |
+| `obs open <name>` | gui | Open a note in Obsidian app |
+
+### Creating, reading, and opening notes
 
 Make sure that obsidian is running!
 
 To create new notes use:
 ```bash
 obs create mynewnote "this is my note content"
+```
+
+To print note content to stdout:
+```bash
+obs get mynewnote
+obs get notes/project/mynewnote
 ```
 
 To open notes:

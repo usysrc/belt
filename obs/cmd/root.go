@@ -16,6 +16,7 @@ to perform various operations like creating notes, opening notes, and searching.
 	cmd.AddCommand(
 		NewConfigCmd(basePath, cfg),
 		NewCreateCmd(cfg),
+		NewGetCmd(cfg),
 		NewOpenCmd(cfg),
 		NewSearchCmd(cfg),
 	)

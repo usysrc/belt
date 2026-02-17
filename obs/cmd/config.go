@@ -14,6 +14,8 @@ func NewConfigCmd(basePath string, cfg *viper.Viper) *cobra.Command {
 
 	var targetFolder string
 
+	var vaultPath string
+
 	cmd := &cobra.Command{
 		Use:   "config",
 		Short: "Configure the CLI",
@@ -21,6 +23,10 @@ func NewConfigCmd(basePath string, cfg *viper.Viper) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg.Set("vault", vault)
 			cfg.Set("targetFolder", targetFolder)
+
+			if cmd.Flags().Changed("vaultPath") {
+				cfg.Set("vaultPath", vaultPath)
+			}
 
 			configFile := filepath.Join(
 				basePath,
@@ -32,7 +38,12 @@ func NewConfigCmd(basePath string, cfg *viper.Viper) *cobra.Command {
 				return fmt.Errorf("failed to write config: %w", err)
 			}
 
-			fmt.Printf("Configuration saved: vault = %s, targetFolder = %s\n", vault, targetFolder)
+			fmt.Printf(
+				"Configuration saved: vault = %s, targetFolder = %s, vaultPath = %s\n",
+				vault,
+				targetFolder,
+				cfg.GetString("vaultPath"),
+			)
 
 			return nil
 		},
@@ -49,6 +60,13 @@ func NewConfigCmd(basePath string, cfg *viper.Viper) *cobra.Command {
 	if err := cmd.MarkFlagRequired("targetFolder"); err != nil {
 		log.Fatal("Error marking flag as required:", err)
 	}
+
+	cmd.Flags().StringVar(
+		&vaultPath,
+		"vaultPath",
+		"",
+		"Absolute path to the Obsidian vault on disk (used by non-GUI commands like get)",
+	)
 
 	return cmd
 }

@@ -36,11 +36,37 @@ func TestNewConfigCmd(t *testing.T) {
 
 	vault := cfg.GetString("vault")
 	targetFolder := cfg.GetString("targetFolder")
+	vaultPath := cfg.GetString("vaultPath")
 
 	assert.Equal(t, "testVault", vault)
 	assert.Equal(t, "testFolder", targetFolder)
+	assert.Equal(t, "", vaultPath)
 
 	// Check if the config file is created
 	_, err = os.Stat(configFile)
 	assert.NoError(t, err)
+}
+
+func TestNewConfigCmd_WithVaultPath(t *testing.T) {
+	t.Parallel()
+
+	cfg := viper.New()
+
+	tempDir := t.TempDir()
+	configDir := filepath.Join(tempDir, ".config", "obsidian-cli")
+
+	err := os.MkdirAll(configDir, 0750)
+	assert.NoError(t, err)
+
+	cmd := NewConfigCmd(tempDir, cfg)
+	cmd.SetArgs([]string{
+		"--vault", "testVault",
+		"--targetFolder", "testFolder",
+		"--vaultPath", "/tmp/my-vault",
+	})
+
+	err = cmd.Execute()
+	assert.NoError(t, err)
+
+	assert.Equal(t, "/tmp/my-vault", cfg.GetString("vaultPath"))
 }
