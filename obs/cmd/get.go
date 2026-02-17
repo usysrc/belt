@@ -1,27 +1,16 @@
 package cmd
 
 import (
-	"bufio"
-	"context"
-	"errors"
 	"fmt"
-	"io"
 	"io/fs"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"sort"
-	"strconv"
 	"strings"
 
 	"codeberg.org/usysrc/belt/obs/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-)
-
-var (
-	fzfLookPath = exec.LookPath
-	fzfCommand  = exec.CommandContext
 )
 
 func NewGetCmd(cfg *viper.Viper) *cobra.Command {
@@ -49,11 +38,7 @@ func NewGetCmd(cfg *viper.Viper) *cobra.Command {
 				return err
 			}
 
-			selected, err := selectCandidate(
-				candidates,
-				cmd.ErrOrStderr(),
-				cmd.InOrStdin(),
-			)
+			selected, err := selectCandidate(candidates)
 			if err != nil {
 				return err
 			}
@@ -164,7 +149,7 @@ func resolvePathCandidate(vaultPath, notePath string) (string, error) {
 	return candidateAbs, nil
 }
 
-func selectCandidate(candidates []string, errOut io.Writer, in io.Reader) (string, error) {
+func selectCandidate(candidates []string) (string, error) {
 	switch len(candidates) {
 	case 0:
 		return "", fmt.Errorf("no note candidates found")
@@ -172,71 +157,5 @@ func selectCandidate(candidates []string, errOut io.Writer, in io.Reader) (strin
 		return candidates[0], nil
 	}
 
-	if _, err := fzfLookPath("fzf"); err == nil {
-		selected, selectErr := selectWithFZF(candidates)
-		if selectErr != nil {
-			return "", selectErr
-		}
-
-		return selected, nil
-	}
-
-	return selectWithAsk(candidates, errOut, in)
-}
-
-func selectWithFZF(candidates []string) (string, error) {
-	cmd := fzfCommand(context.Background(), "fzf")
-	cmd.Stdin = strings.NewReader(strings.Join(candidates, "\n") + "\n")
-
-	out, err := cmd.Output()
-	if err != nil {
-		var exitErr *exec.ExitError
-
-		if errors.As(err, &exitErr) {
-			return "", fmt.Errorf("note selection canceled")
-		}
-
-		return "", fmt.Errorf("failed to run fzf: %w", err)
-	}
-
-	selected := strings.TrimSpace(string(out))
-	if selected == "" {
-		return "", fmt.Errorf("note selection canceled")
-	}
-
-	return selected, nil
-}
-
-func selectWithAsk(candidates []string, errOut io.Writer, in io.Reader) (string, error) {
-	if _, err := fmt.Fprintln(errOut, "Multiple notes matched:"); err != nil {
-		return "", fmt.Errorf("failed to write selection prompt: %w", err)
-	}
-
-	for idx, candidate := range candidates {
-		if _, err := fmt.Fprintf(errOut, "%d) %s\n", idx+1, candidate); err != nil {
-			return "", fmt.Errorf("failed to write selection prompt: %w", err)
-		}
-	}
-
-	if _, err := fmt.Fprintf(errOut, "Select note [1-%d]: ", len(candidates)); err != nil {
-		return "", fmt.Errorf("failed to write selection prompt: %w", err)
-	}
-
-	reader := bufio.NewReader(in)
-
-	line, err := reader.ReadString('\n')
-	if err != nil {
-		return "", fmt.Errorf("failed to read selection: %w", err)
-	}
-
-	choice, err := strconv.Atoi(strings.TrimSpace(line))
-	if err != nil {
-		return "", fmt.Errorf("invalid selection")
-	}
-
-	if choice < 1 || choice > len(candidates) {
-		return "", fmt.Errorf("selection out of range")
-	}
-
-	return candidates[choice-1], nil
+	return "", fmt.Errorf("multiple note candidates found")
 }

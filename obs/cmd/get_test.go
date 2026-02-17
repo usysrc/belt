@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -89,70 +88,4 @@ func TestNewGetCmd_PrintsContentByRelativePath(t *testing.T) {
 	err := cmd.Execute()
 	require.NoError(t, err)
 	assert.Equal(t, "nested content", out.String())
-}
-
-//nolint:paralleltest // Mutates package-level fzfLookPath stub for deterministic fallback behavior.
-func TestNewGetCmd_DuplicateUsesAskFallback(t *testing.T) {
-	oldLookPath := fzfLookPath
-
-	t.Cleanup(func() {
-		fzfLookPath = oldLookPath
-	})
-
-	fzfLookPath = func(file string) (string, error) {
-		return "", fmt.Errorf("%s not found", file)
-	}
-
-	vault := t.TempDir()
-	require.NoError(t, os.MkdirAll(filepath.Join(vault, "a"), 0750))
-	require.NoError(t, os.MkdirAll(filepath.Join(vault, "b"), 0750))
-	require.NoError(t, os.WriteFile(filepath.Join(vault, "a", "dup.md"), []byte("first"), 0600))
-	require.NoError(t, os.WriteFile(filepath.Join(vault, "b", "dup.md"), []byte("second"), 0600))
-
-	cfg := viper.New()
-	cfg.Set("vaultPath", vault)
-	cmd := NewGetCmd(cfg)
-	cmd.SetArgs([]string{"dup"})
-
-	in := bytes.NewBufferString("2\n")
-	out := &bytes.Buffer{}
-	errOut := &bytes.Buffer{}
-
-	cmd.SetIn(in)
-	cmd.SetOut(out)
-	cmd.SetErr(errOut)
-
-	err := cmd.Execute()
-	require.NoError(t, err)
-	assert.Equal(t, "second", out.String())
-	assert.Contains(t, errOut.String(), "Multiple notes matched:")
-}
-
-//nolint:paralleltest // Mutates package-level fzfLookPath stub for deterministic fallback behavior.
-func TestNewGetCmd_DuplicateAskFallbackInvalidSelection(t *testing.T) {
-	oldLookPath := fzfLookPath
-
-	t.Cleanup(func() {
-		fzfLookPath = oldLookPath
-	})
-
-	fzfLookPath = func(file string) (string, error) {
-		return "", fmt.Errorf("%s not found", file)
-	}
-
-	vault := t.TempDir()
-	require.NoError(t, os.MkdirAll(filepath.Join(vault, "a"), 0750))
-	require.NoError(t, os.MkdirAll(filepath.Join(vault, "b"), 0750))
-	require.NoError(t, os.WriteFile(filepath.Join(vault, "a", "dup.md"), []byte("first"), 0600))
-	require.NoError(t, os.WriteFile(filepath.Join(vault, "b", "dup.md"), []byte("second"), 0600))
-
-	cfg := viper.New()
-	cfg.Set("vaultPath", vault)
-	cmd := NewGetCmd(cfg)
-	cmd.SetArgs([]string{"dup"})
-	cmd.SetIn(bytes.NewBufferString("3\n"))
-
-	err := cmd.Execute()
-	require.Error(t, err)
-	assert.Contains(t, err.Error(), "selection out of range")
 }
