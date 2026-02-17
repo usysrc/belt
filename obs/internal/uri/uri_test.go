@@ -46,14 +46,14 @@ func TestBuildURI(t *testing.T) {
 		t.Run(tt.action, func(t *testing.T) {
 			t.Parallel()
 
-			params := URIParams{
+			params := Request{
 				Vault:        tt.vault,
 				Param:        tt.param,
 				Action:       tt.action,
 				TargetFolder: tt.targetFolder,
 			}
 
-			got := buildURI(params)
+			got := build(params)
 			if got != tt.expected {
 				t.Errorf("buildURI() = %v, want %v", got, tt.expected)
 			}
