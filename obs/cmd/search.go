@@ -27,7 +27,7 @@ func NewSearchCmd(cfg *viper.Viper) *cobra.Command {
 				return fmt.Errorf("query can not be empty")
 			}
 
-			return uri.Execute("search", vault, query, "", "")
+			return uri.Search(vault, query)
 		},
 	}
 

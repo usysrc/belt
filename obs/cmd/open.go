@@ -34,7 +34,7 @@ func NewOpenCmd(cfg *viper.Viper) *cobra.Command {
 				return fmt.Errorf("note name cannot be empty")
 			}
 
-			return uri.Execute("open", vault, noteName, targetFolder, "")
+			return uri.Open(vault, noteName, targetFolder)
 		},
 	}
 

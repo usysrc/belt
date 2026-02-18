@@ -8,56 +8,71 @@ import (
 	"runtime"
 )
 
-// Request represents the parameters needed to build an Obsidian URI.
-type Request struct {
-	Vault        string
-	Param        string
-	Content      string
-	Action       string
-	TargetFolder string
-}
-
-// Execute builds the Obsidian URI based on the provided parameters and opens it.
-func Execute(action, vault, param, targetFolder, content string) error {
-	req := Request{
-		Vault:        vault,
-		Param:        param,
-		Action:       action,
-		TargetFolder: targetFolder,
-		Content:      content,
-	}
-	uri := build(req)
+func New(vault, file, targetFolder, content string) error {
+	uri := buildNewURI(vault, file, targetFolder, content)
 
 	return open(uri)
 }
 
-// build constructs the Obsidian URI based on the request parameters.
-func build(params Request) string {
-	encodedVault := url.PathEscape(params.Vault)
-	encodedParam := url.PathEscape(params.Param)
-	encodedContent := url.PathEscape(params.Content)
+func Open(vault, file, targetFolder string) error {
+	uri := buildOpenURI(vault, file, targetFolder)
 
-	var paramName string
-
-	switch params.Action {
-	case "search":
-		paramName = "query"
-	default:
-		paramName = "file"
-
-		if params.TargetFolder != "" {
-			encodedFolder := url.PathEscape(params.TargetFolder)
-			encodedParam = fmt.Sprintf("%s/", encodedFolder) + encodedParam
-		}
-	}
-
-	uri := fmt.Sprintf("obsidian://%s?vault=%s&%s=%s&content=%s",
-		params.Action, encodedVault, paramName, encodedParam, encodedContent)
-
-	return uri
+	return open(uri)
 }
 
-// open attempts to open the given URI using the appropriate command based on the operating system.
+func Search(vault, query string) error {
+	uri := buildSearchURI(vault, query)
+
+	return open(uri)
+}
+
+func buildNewURI(vault, file, targetFolder, content string) string {
+	encodedVault := url.PathEscape(vault)
+	encodedFile := url.PathEscape(file)
+	encodedContent := url.PathEscape(content)
+	paramValue := encodedFile
+
+	if targetFolder != "" {
+		encodedFolder := url.PathEscape(targetFolder)
+		paramValue = fmt.Sprintf("%s/%s", encodedFolder, encodedFile)
+	}
+
+	return fmt.Sprintf(
+		"obsidian://new?vault=%s&file=%s&content=%s",
+		encodedVault,
+		paramValue,
+		encodedContent,
+	)
+}
+
+func buildOpenURI(vault, file, targetFolder string) string {
+	encodedVault := url.PathEscape(vault)
+	encodedFile := url.PathEscape(file)
+	paramValue := encodedFile
+
+	if targetFolder != "" {
+		encodedFolder := url.PathEscape(targetFolder)
+		paramValue = fmt.Sprintf("%s/%s", encodedFolder, encodedFile)
+	}
+
+	return fmt.Sprintf(
+		"obsidian://open?vault=%s&file=%s&content=",
+		encodedVault,
+		paramValue,
+	)
+}
+
+func buildSearchURI(vault, query string) string {
+	encodedVault := url.PathEscape(vault)
+	encodedQuery := url.PathEscape(query)
+
+	return fmt.Sprintf(
+		"obsidian://search?vault=%s&query=%s&content=",
+		encodedVault,
+		encodedQuery,
+	)
+}
+
 func open(uri string) error {
 	var cmd *exec.Cmd
 

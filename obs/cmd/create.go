@@ -38,7 +38,7 @@ func NewCreateCmd(cfg *viper.Viper) *cobra.Command {
 			if len(args) > 1 {
 				noteContent := args[1]
 
-				return uri.Execute("new", vault, noteName, targetFolder, noteContent)
+				return uri.New(vault, noteName, targetFolder, noteContent)
 			}
 
 			note, err := io.ReadAll(os.Stdin)
@@ -48,7 +48,7 @@ func NewCreateCmd(cfg *viper.Viper) *cobra.Command {
 
 			noteContent := string(note)
 
-			return uri.Execute("new", vault, noteName, targetFolder, noteContent)
+			return uri.New(vault, noteName, targetFolder, noteContent)
 		},
 	}
 
